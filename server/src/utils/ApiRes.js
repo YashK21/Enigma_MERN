@@ -2,8 +2,8 @@ class ApiRes{
     constructor(statusCode, msg="User Response", data)
     {
         this.statusCode = statusCode
-        this.message = msg
         this.data = data
+        this.message = msg
         this.success = true || statusCode < 400
     }
 }
