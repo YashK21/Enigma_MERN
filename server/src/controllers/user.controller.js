@@ -1,7 +1,6 @@
 import { User } from "../model/user.model.js";
 import ApiError from "../utils/ApiError.js";
 import ApiRes from "../utils/ApiRes.js";
-import mongoose from "mongoose";
 
 const genAccessTokenandRefreshToken = async (userId) => {
   try {
@@ -15,7 +14,11 @@ const genAccessTokenandRefreshToken = async (userId) => {
     });
     return { accessToken, refreshToken };
   } catch (error) {
-    throw new ApiError(500, "Something went wrong while generating tokens");
+    throw new ApiError(
+      500,
+      "Something went wrong while generating tokens",
+      error
+    );
   }
 };
 
@@ -51,6 +54,7 @@ const registerUser = async (req, res) => {
   return res.status(201).json(new ApiRes(200, userSaved, "User Registered"));
 };
 
+//login
 const loginUser = async (req, res) => {
   const { username, password } = req.body;
   if (!username) throw new ApiError(400, "username is required");
@@ -78,18 +82,45 @@ const loginUser = async (req, res) => {
     secure: true,
   };
 
-  return;
-  res
-  .status(200)
-  .cookie("accessToken", accessToken,options)
-  .cookie("refreshToken", refreshToken,options)
-  .json(
-    new ApiRes(200,{
-        user : existedUser,
-        accessToken,
-        refreshToken
-    }),
-    "User logged in successfully"
-  )
+  return res
+    .status(200)
+    .cookie("accessToken", accessToken, options)
+    .cookie("refreshToken", refreshToken, options)
+    .json(
+      new ApiRes(
+        200,
+        {
+          user: loggedInUser,
+          accessToken,
+          refreshToken,
+        },
+        "User logged in successfully"
+      )
+    );
 };
-export { registerUser ,loginUser};
+
+//logout
+const logoutUser = async (req, res) => {
+  await User.findByIdAndUpdate(
+    req.user._id,
+    {
+      $unset: {
+        refreshToken: 1,
+      },
+    },
+    {
+      new: true,
+    }
+  );
+  const options = {
+    httpOnly: true,
+    secure: true,
+  };
+
+  return res
+    .status(200)
+    .clearCookie("accessToken", options)
+    .clearCookie("refreshToken", options)
+    .json(new ApiRes(200, {}, "User LoggedOut SuccessFully!"));
+};
+export { registerUser, loginUser, logoutUser };

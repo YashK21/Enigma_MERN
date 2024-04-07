@@ -49,7 +49,7 @@ userSchema.methods.genAccessToken = function () {
     }
   );
 };
-userSchema.methods.genAccessToken = function () {
+userSchema.methods.genRefreshToken = function () {
   return jwt.sign(
     {
       _id: this._id,
