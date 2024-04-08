@@ -1,6 +1,10 @@
 import React from "react";
-
+import {useNavigate} from "react-router-dom"
 const SignUp = () => {
+  const navigate = useNavigate()
+  const handleLoginAndSignUp = () => {
+    navigate("/login")
+  }
   return (
     <div>
       <div class="container flex flex-col mx-auto bg-white rounded-lg pt-12 my-5">
@@ -13,18 +17,6 @@ const SignUp = () => {
                 </h3>
 
                 <label
-                  for="email"
-                  class="mb-2 text-sm text-start text-grey-900"
-                >
-                  Username
-                </label>
-                <input
-                  id="email"
-                  type="email"
-                  placeholder="email"
-                  class="flex items-center w-full px-5 py-4 mr-2 text-sm font-medium outline-none focus:bg-grey-400 mb-7 placeholder:text-grey-700 bg-grey-200 text-dark-grey-900 rounded-2xl"
-                />
-                <label
                   for="username"
                   class="mb-2 text-sm text-start text-grey-900"
                 >
@@ -32,8 +24,20 @@ const SignUp = () => {
                 </label>
                 <input
                   id="username"
-                  type="username"
-                  placeholder="Username"
+                  type="text"
+                  placeholder="enter username"
+                  class="flex items-center w-full px-5 py-4 mr-2 text-sm font-medium outline-none focus:bg-grey-400 mb-7 placeholder:text-grey-700 bg-grey-200 text-dark-grey-900 rounded-2xl"
+                />
+                <label
+                  for="email"
+                  class="mb-2 text-sm text-start text-grey-900"
+                >
+                  Email
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  placeholder="enter email"
                   class="flex items-center w-full px-5 py-4 mr-2 text-sm font-medium outline-none focus:bg-grey-400 mb-7 placeholder:text-grey-700 bg-grey-200 text-dark-grey-900 rounded-2xl"
                 />
                 <label
@@ -54,9 +58,9 @@ const SignUp = () => {
                 </button>
                 <p class="text-sm leading-relaxed text-grey-900">
                    Registered Already?{" "}
-                  <a href="javascript:void(0)" class="font-bold text-grey-700">
+                  <button onClick={handleLoginAndSignUp} class="font-bold text-grey-700">
                     Login Here!
-                  </a>
+                  </button>
                 </p>
               </form>
             </div>
