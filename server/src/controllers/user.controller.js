@@ -1,7 +1,6 @@
 import { User } from "../model/user.model.js";
 import ApiError from "../utils/ApiError.js";
 import ApiRes from "../utils/ApiRes.js";
-
 const genAccessTokenandRefreshToken = async (userId) => {
   try {
     const existedUser = await User.findById(userId);
@@ -24,7 +23,7 @@ const genAccessTokenandRefreshToken = async (userId) => {
 
 //reg
 const registerUser = async (req, res) => {
-  const { email, username, password } = req.body;
+  const { username, email, password } = req.body;
   if (
     [email, username, password].some((emptyField) => emptyField.trim() === "")
   ) {
@@ -57,8 +56,13 @@ const registerUser = async (req, res) => {
 //login
 const loginUser = async (req, res) => {
   const { username, password } = req.body;
-  if (!username) throw new ApiError(400, "username is required");
-
+  if (!username) {
+    // throw new ApiError(400, "username is required");
+   return res.status(400).json(new ApiError(400, "username is required"));
+  }
+  if (!password) {
+    return  res.status(400).json(new ApiError(400, "password is required"));
+  }
   const existedUser = await User.findOne({
     $or: [
       {
@@ -66,9 +70,16 @@ const loginUser = async (req, res) => {
       },
     ],
   });
-  if (!existedUser) throw new ApiError(404, "User not found");
+  if (!existedUser) {
+    // throw new ApiError(404, "User not found");
+    return  res.status(400).json(new ApiError(404, "User not found"));
+  }
   const passwordValid = await existedUser.passCheck(password);
-  if (!passwordValid) throw new ApiError(401, "Password is wrong!!");
+  if (!passwordValid) {
+    // throw new ApiError(401, "Password is wrong!!");
+    return  res.status(401).json(new ApiError(404, "Password is wrong!!"));
+  }
+
   const { accessToken, refreshToken } = await genAccessTokenandRefreshToken(
     existedUser._id
   );
@@ -78,7 +89,8 @@ const loginUser = async (req, res) => {
   );
 
   const options = {
-    httpOnly: true,
+    // httpOnly: true,
+    httpOnly: false,
     secure: true,
   };
 
@@ -123,4 +135,9 @@ const logoutUser = async (req, res) => {
     .clearCookie("refreshToken", options)
     .json(new ApiRes(200, {}, "User LoggedOut SuccessFully!"));
 };
-export { registerUser, loginUser, logoutUser };
+
+//level
+const level = async (req, res) => {
+  return res.send("Lvl reached!");
+};
+export { registerUser, loginUser, logoutUser, level };

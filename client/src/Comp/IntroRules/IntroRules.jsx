@@ -1,31 +1,16 @@
-// import React from "react";
-// import Cookies from "js-cookie";
-// import { Navigate } from "react-router-dom";
-// const IntroRules = () => {
-//   const accessToken = Cookies.get("accessToken");
-//   return (
-//     <>
-//       {accessToken ? (
-//         <>
-//           <h2>IntroRules</h2>
-//         </>
-//       ) : (
-//         <Navigate to="login" />
-//       )}
-//     </>
-//   );
-// };
-
-// export default IntroRules;
-
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const IntroRules = () => {
-
+  const navigate = useNavigate();
+const handleEnterGame = () => {
+  navigate("/level/1")
+}
   return (
     <>
-    <h2>IntroRules</h2>
-  </>
+      <h2>IntroRules</h2>
+      <button onClick={handleEnterGame}>Move to the game</button>
+    </>
   );
 };
 
