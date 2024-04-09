@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Route,
   RouterProvider,
@@ -13,51 +13,69 @@ import Login from "../Login/Login.jsx";
 import Level from "../Level/Level.jsx";
 import IntroRules from "../IntroRules/IntroRules.jsx";
 import Cookies from "js-cookie";
-import NoAuth from "../NoAuth/NoAuth.jsx";
-const accessToken = Cookies.get("accessToken");
+const Routes = createBrowserRouter([
+  {
+    path: "/",
+    element: <Layout />,
+    children: [
+      {
+        path: "/",
+        element: <Welcome />,
 
-// const Routes = createBrowserRouter([
-//   {
-//     path:"/",
-//     element:<Layout/>,
-//     children: [
-//       {
-//         path:"/",
-//         element:<Welcome/>,
-//       },
-//       {
-//         path:"login",
-//         element:<Login/>
-//       },
-//       {
-//         path:"signup",
-//         element:<SignUp/>
-//       },
-//       {
-//         path:"login",
-//         element:<Logout/>
-//       }
-//     ]
-//   }
-// ])
-const routes = createBrowserRouter(
-  createRoutesFromElements(
-    <Route path="/" element={<Layout />}>
-      <Route path="" element={<Welcome />} />
-      <Route path="login" element={<Login />} />
-      <Route path="signup" element={<SignUp />} />
-      {/* <Route path='rules' element={accessToken ? <IntroRules/> : <NoAuth/>}/> */}
-      <Route
-        path="rules"
-        element={accessToken ? <IntroRules /> : <Navigate to="/login" />}
-      />
+      },
+      {
+        path: "login",
+        element: <Login />,
+      },
+      {
+        path: "signup",
+        element: <SignUp />,
+      },
+      {
+        path: "rules",
+        element: (
+          <ProtectedRoute>
+            <IntroRules />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "level/:lvl",
+        element: (
+          <ProtectedRoute>
+            <Level />
+          </ProtectedRoute>
+        ),
+      },
+    ],
+  },
+]);
+let accessToken = Cookies.get("accessToken");
 
-      <Route
-        path="level/:lvl"
-        element={accessToken ? <Level /> : <Navigate to="/login" />}
-      />
-    </Route>
-  )
-);
-
-export default routes;
+function ProtectedRoute({ children }) {
+  const isAuth = !!accessToken;
+  if (isAuth) {
+    return <>{children}</>;
+  }
+  return <Navigate to="/login" replace />;
+}
+export default Routes;
+// const routes = createBrowserRouter(
+//   createRoutesFromElements(
+//     <Route path="/" element={<Layout />}>
+//       <Route path="" element={<Welcome />} />
+//       <Route path="login" element={<Login />} />
+//       <Route path="signup" element={<SignUp />} />
+//       <Route element={ProtectedRoute}>
+//         <Route
+//           path="rules"
+//           element={accessToken ? <IntroRules /> : <NoAuth />}
+//         />
+//       </Route>
+//       <Route
+//         path="level/:lvl"
+//         element={accessToken ? <Level /> : <Navigate to="/login" />}
+//       />
+//     </Route>
+//   )
+// );
