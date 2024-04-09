@@ -4,8 +4,10 @@ import { useNavigate } from "react-router-dom";
 const Login = () => {
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
+  const [msg, setMsg] = useState("");
   const navigate = useNavigate();
   const handleLogin = async (e) => {
+    setMsg("");
     e.preventDefault();
     let res = await fetch("http://localhost:8000/api/v1/login", {
       method: "POST",
@@ -15,11 +17,16 @@ const Login = () => {
       },
       credentials: "include",
     });
-    res = await res.json();
-    if(!res) alert("User not found")
-    else if(res.success) navigate("/rules")
-    // console.log(res);
-    // console.log(Cookies.get("refreshToken"))
+    if (!res.ok) {
+      res = await res.json();
+      console.log("first");
+      // console.log(!res.ok);
+      return setMsg(res?.errorMessage);
+      // console.log(typeof res?.errorMessage)
+      console.log(res?.errorMessage);
+    }
+    console.log(res);
+    navigate("/rules");
   };
   const handleLoginAndSignUp = () => {
     navigate("/signup");
@@ -70,6 +77,7 @@ const Login = () => {
                 >
                   Sign In
                 </button>
+                <div>{msg}</div>
                 <p class="text-sm leading-relaxed text-grey-900">
                   Not registered yet?{" "}
                   <button
