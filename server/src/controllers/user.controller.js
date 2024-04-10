@@ -1,3 +1,4 @@
+import { Lvl } from "../model/lvl.model.js";
 import { User } from "../model/user.model.js";
 import ApiError from "../utils/ApiError.js";
 import ApiRes from "../utils/ApiRes.js";
@@ -27,14 +28,18 @@ const registerUser = async (req, res) => {
   if (
     [email, username, password].some((emptyField) => emptyField.trim() === "")
   ) {
-    throw new ApiError(400, "All Fields are required");
+    // throw new ApiError(400, "All Fields are required");
+    return res.status(400).json(new ApiError(400, "All Fields are required"));
   }
 
   //check for existing user
   const existedUser = await User.findOne({
     $or: [{ username }, { email }],
   });
-  if (existedUser) throw new ApiError(400, "User Already Exists");
+  if (existedUser) {
+    // throw new ApiError(400, "User Already Exists")
+    return res.status(400).json(new ApiError(400, "User Already Exists"));
+  }
 
   //create
   const createdUser = await User.create({
@@ -47,9 +52,12 @@ const registerUser = async (req, res) => {
   const userSaved = await User.findById(createdUser._id).select(
     "-password -refreshtoken"
   );
-  if (!userSaved)
-    throw new ApiError(500, "Something went wrong while registration");
-
+  if (!userSaved) {
+    // throw new ApiError(500, "Something went wrong while registration");
+    return res
+      .status(500)
+      .json(new ApiError(500, "Something went wrong while registration"));
+  }
   return res.status(201).json(new ApiRes(200, userSaved, "User Registered"));
 };
 
@@ -58,10 +66,10 @@ const loginUser = async (req, res) => {
   const { username, password } = req.body;
   if (!username) {
     // throw new ApiError(400, "username is required");
-   return res.status(400).json(new ApiError(400, "username is required"));
+    return res.status(400).json(new ApiError(400, "username is required"));
   }
   if (!password) {
-    return  res.status(400).json(new ApiError(400, "password is required"));
+    return res.status(400).json(new ApiError(400, "password is required"));
   }
   const existedUser = await User.findOne({
     $or: [
@@ -72,12 +80,12 @@ const loginUser = async (req, res) => {
   });
   if (!existedUser) {
     // throw new ApiError(404, "User not found");
-    return  res.status(400).json(new ApiError(404, "User not found"));
+    return res.status(400).json(new ApiError(404, "User not found"));
   }
   const passwordValid = await existedUser.passCheck(password);
   if (!passwordValid) {
     // throw new ApiError(401, "Password is wrong!!");
-    return  res.status(401).json(new ApiError(404, "Password is wrong!!"));
+    return res.status(401).json(new ApiError(404, "Password is wrong!!"));
   }
 
   const { accessToken, refreshToken } = await genAccessTokenandRefreshToken(
@@ -138,6 +146,6 @@ const logoutUser = async (req, res) => {
 
 //level
 const level = async (req, res) => {
-  return res.send("Lvl reached!");
+  return res.send("Lvl")
 };
 export { registerUser, loginUser, logoutUser, level };
