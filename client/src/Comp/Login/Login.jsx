@@ -19,13 +19,15 @@ const Login = () => {
     });
     if (!res.ok) {
       res = await res.json();
-      console.log("first");
-      // console.log(!res.ok);
-      return setMsg(res?.errorMessage);
-      // console.log(typeof res?.errorMessage)
+      console.log(res.ok);
       console.log(res?.errorMessage);
+      return setMsg(res?.errorMessage);
     }
+    res = await res.json()
+    // console.log(typeof res);
     console.log(res);
+    let user = res.message.user.username
+    localStorage.setItem("username",user)
     navigate("/rules");
   };
   const handleLoginAndSignUp = () => {
@@ -77,8 +79,9 @@ const Login = () => {
                 >
                   Sign In
                 </button>
-                <div>{msg}</div>
+                {msg}
                 <p class="text-sm leading-relaxed text-grey-900">
+                  <br />
                   Not registered yet?{" "}
                   <button
                     onClick={handleLoginAndSignUp}
