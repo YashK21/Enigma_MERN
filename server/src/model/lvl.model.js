@@ -1,8 +1,15 @@
 import mongoose from "mongoose";
 
 const lvlSchema = new mongoose.Schema({
-    one :{
-        type :"String"
+    Lvl_no: {
+        type: String,
+        required: true,
+        unique: true,
+    },
+    Lvl_Img:{
+        type:String,
+        required: true,
+        unique: true,
     }
 })
-export const Lvl = mongoose.model("Lvl",lvlSchema)
+export const Lvl = mongoose.model("Lvl",lvlSchema )

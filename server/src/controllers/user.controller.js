@@ -145,7 +145,73 @@ const logoutUser = async (req, res) => {
 };
 
 //level
+
+// const level = async (req, res) => {
+//   const lvlNo = req.params.id;
+//   console.log(lvlNo);
+//   const lvlImg = await Lvl.findOne({ 1: lvlNo });
+//   console.log(lvlNo);
+//   // console.log(lvlImg);
+//   return res.status(200).json(new ApiRes(200, { lvlImg }), `Lvl No: ${lvlNo}`);
+// };
+
 const level = async (req, res) => {
-  return res.send("Lvl")
+  const lvlNo = req.params.lvl;
+  // const lvlNo = 1;
+  console.log(`Querying for "1": ${lvlNo}`);
+
+  try {
+    let lvlImg = await Lvl.findOne({ Lvl_no: lvlNo });
+    console.log(`Query result:`, lvlImg);
+   lvlImg = (lvlImg.Lvl_Img);
+
+    if (!lvlImg) {
+      return res.status(404).json({
+        statusCode: 404,
+        data: `Lvl not found for id: ${lvlNo}`,
+        message: null,
+        success: true,
+      });
+    }
+     return res
+       .status(200)
+       .json({ statusCode: 200, data: { lvlImg }, message: `Lvl No: ${lvlNo}`, success: true });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      statusCode: 500,
+      data: null,
+      message: "Internal server error",
+      success: true,
+    });
+  }
 };
+
+// const level = async (req, res) => {
+//   const lvlNo = "Level 1"; // This is the value you're querying for in the "1" field
+//   console.log(`Querying for "1": ${lvlNo}`);
+
+//   try {
+//      // Use findOne() to find the document by the "1" field and project only the "1" field
+//      const lvlImg = await Lvl.findOne({ "1": lvlNo });
+//      console.log(`Query result:`, lvlImg);
+
+//      if (!lvlImg) {
+//        return res
+//          .status(404)
+//          .json({ statusCode: 404, data: `Lvl not found for id: ${lvlNo}`, message: null, success: true });
+//      }
+//      // Extract the value of the "1" field from the document
+//      const lvlValue = lvlImg["1"];
+
+//      // Return the value of the "1" field as the response
+//      return res
+//        .status(200)
+//        .json({ statusCode: 200, data: lvlValue, message: `Lvl No: ${lvlNo}`, success: true });
+//   } catch (error) {
+//      console.error(error);
+//      return res.status(500).json({ statusCode: 500, data: null, message: "Internal server error", success: true });
+//   }
+//  };
+
 export { registerUser, loginUser, logoutUser, level };
