@@ -5,6 +5,21 @@ import { useNavigate } from "react-router-dom";
 const Level = () => {
   const [lvlImg, setLvlImg] = useState();
   const navigate = useNavigate();
+  const handleLvlImg = async () => {
+    try {
+     let res =  await fetch("http://localhost:8000/api/v1/level/1",{
+        credentials: "include",
+      })
+      res = await res.json() 
+      res = await (res.data.lvlImg)
+      setLvlImg(res)
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  }
+  useEffect(()=>{
+    handleLvlImg()
+  },[lvlImg])
   const handleLogout = async () => {
     try {
       await fetch("http://localhost:8000/api/v1/logout", {
