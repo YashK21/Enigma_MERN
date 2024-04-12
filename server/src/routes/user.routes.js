@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   level,
+  levelAnsCheck,
   loginUser,
   logoutUser,
   registerUser,
@@ -10,6 +11,7 @@ const router = Router();
 router.route("/register").post(registerUser);
 router.route("/login").post(loginUser);
 router.route("/level/:lvl").get(level);
-router.route("/logout").post(verifyJWT, logoutUser);
+router.route("/levelanscheck/:lvl").post(levelAnsCheck)
+ router.route("/logout").post(verifyJWT, logoutUser);
 
 export default router;
