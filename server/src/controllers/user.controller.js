@@ -141,77 +141,54 @@ const logoutUser = async (req, res) => {
     .status(200)
     .clearCookie("accessToken", options)
     .clearCookie("refreshToken", options)
+    .clearCookie("connect.sid", options)
     .json(new ApiRes(200, {}, "User LoggedOut SuccessFully!"));
 };
 
 //level
-
-// const level = async (req, res) => {
-//   const lvlNo = req.params.id;
-//   console.log(lvlNo);
-//   const lvlImg = await Lvl.findOne({ 1: lvlNo });
-//   console.log(lvlNo);
-//   // console.log(lvlImg);
-//   return res.status(200).json(new ApiRes(200, { lvlImg }), `Lvl No: ${lvlNo}`);
-// };
-
 const level = async (req, res) => {
-  const lvlNo = req.params.lvl;
-  // const lvlNo = 1;
-  console.log(`Querying for "1": ${lvlNo}`);
-
+  let lvlNo = req.params.lvl;
+  req.session.lvlNo = lvlNo;
+  console.log(req.session.lvlNo, "from session");
+  console.log(`Querying for "Level No": ${lvlNo}`);
   try {
     let lvlImg = await Lvl.findOne({ Lvl_no: lvlNo });
     console.log(`Query result:`, lvlImg);
-   lvlImg = (lvlImg.Lvl_Img);
-
+    lvlImg = lvlImg.Lvl_Img;
     if (!lvlImg) {
-      return res.status(404).json({
-        statusCode: 404,
-        data: `Lvl not found for id: ${lvlNo}`,
-        message: null,
-        success: true,
-      });
+      return res
+        .status(404)
+        .json(new ApiError(404, `Lvl not found for id: ${lvlNo}`));
     }
-     return res
-       .status(200)
-       .json({ statusCode: 200, data: { lvlImg }, message: `Lvl No: ${lvlNo}`, success: true });
+    return res.status(200).json(new ApiRes(200, lvlImg, `Lvl No: ${lvlNo}`));
   } catch (error) {
     console.error(error);
     return res.status(500).json({
       statusCode: 500,
       data: null,
       message: "Internal server error",
-      success: true,
+      success: false,
     });
   }
 };
 
-// const level = async (req, res) => {
-//   const lvlNo = "Level 1"; // This is the value you're querying for in the "1" field
-//   console.log(`Querying for "1": ${lvlNo}`);
+const levelAnsCheck = async (req, res) => {
+  const { ans } = req.body;
+  // console.log(ans)
+  let lvlNo = req.params.lvl;
+  try {
+    let data = await Lvl.findOne({ Lvl_Ans: ans.toLowerCase() });
+    if (!data) return res.status(404).json(new ApiError(404, "Wrong Answer!"));
+    else
+    {
+      lvlNo =  Number(lvlNo)
+      lvlNo = lvlNo +1
+      return res.status(200).json(new ApiRes(200, lvlNo, "Correct Answer"));
+    }
+  } catch (error) {
+    return res.status(500).json(new ApiError(500,"Internal Server Error while submission!"));
+  }
+  // return res.send("Yes!")
+};
 
-//   try {
-//      // Use findOne() to find the document by the "1" field and project only the "1" field
-//      const lvlImg = await Lvl.findOne({ "1": lvlNo });
-//      console.log(`Query result:`, lvlImg);
-
-//      if (!lvlImg) {
-//        return res
-//          .status(404)
-//          .json({ statusCode: 404, data: `Lvl not found for id: ${lvlNo}`, message: null, success: true });
-//      }
-//      // Extract the value of the "1" field from the document
-//      const lvlValue = lvlImg["1"];
-
-//      // Return the value of the "1" field as the response
-//      return res
-//        .status(200)
-//        .json({ statusCode: 200, data: lvlValue, message: `Lvl No: ${lvlNo}`, success: true });
-//   } catch (error) {
-//      console.error(error);
-//      return res.status(500).json({ statusCode: 500, data: null, message: "Internal server error", success: true });
-//   }
-//  };
-
-export { registerUser, loginUser, logoutUser, level };
+export { registerUser, loginUser, logoutUser, level, levelAnsCheck };
