@@ -4,15 +4,14 @@ import { useNavigate, useParams } from "react-router-dom";
 
 const Level = () => {
   const [lvlImg, setLvlImg] = useState();
-  const [lvlAns , setLvlAns] = useState("")
+  const [lvlAns, setLvlAns] = useState("");
   const navigate = useNavigate();
-  const { lvl } = useParams();
+  let { lvl } = useParams();
   const handleLvlImg = async () => {
     try {
       let res = await fetch(`http://localhost:8000/api/v1/level/${lvl}`, {
         credentials: "include",
-      },
-  );
+      });
       res = await res.json();
       const imgData = await res.message;
       setLvlImg(imgData);
@@ -20,25 +19,36 @@ const Level = () => {
       console.error("Logout failed:", error);
     }
   };
- 
+
   const handleLevelAnsCheck = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
-      let res = await fetch(`http://localhost:8000/api/v1/levelanscheck/${lvl}`,{
-        method:"POST", 
-        body: JSON.stringify({ ans: lvlAns }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials:"include",
-      })
-      res = await res.json()
-      setLvlAns("")
-      console.log(res , "from ans check!")
+      let res = await fetch(
+        `http://localhost:8000/api/v1/levelanscheck/${lvl}`,
+        {
+          method: "POST",
+          body: JSON.stringify({ ans: lvlAns }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
+      res = await res.json();
+      if (res.success) {
+        console.log("Correct Answer!", res.message);
+        lvl = Number(lvl);
+        lvl = lvl + 1;
+        console.log(lvl);
+      } else {
+        console.log("Wrong Answer!", res.errorMessage);
+      }
+      setLvlAns("");
+      console.log(res, "from ans check!");
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
   useEffect(() => {
     handleLvlImg();
   }, [lvlImg]);
@@ -62,7 +72,11 @@ const Level = () => {
       Level
       <br />
       <h2>Username : {localStorage.getItem("username")}</h2>
-      <img src={lvlImg} alt="lvl 1" />
+      <img
+        src={lvlImg}
+        alt="lvl 1"
+        className="mx-auto max-w-screen-lg max-h-screen-3/4"
+      />
       <br />
       <div class="flex items-center justify-center mt-4">
         <input
@@ -76,11 +90,11 @@ const Level = () => {
           type="submit"
           onClick={handleLevelAnsCheck}
           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          >
+        >
           Submit
         </button>
         <br />
-          </div> 
+      </div>
       <button onClick={handleLogout}>Logout</button>
     </div>
   );
