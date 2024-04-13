@@ -8,6 +8,7 @@ import Level from "../Level/Level.jsx";
 import IntroRules from "../IntroRules/IntroRules.jsx";
 import NoAuth from "../NoAuth/NoAuth.jsx";
 import Cookies from "js-cookie";
+import Admin from "../Admin/Admin.jsx";
 let accessToken = Cookies.get("accessToken");
 const Routes = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const Routes = createBrowserRouter([
       {
         path: "signup",
         element: <SignUp />,
+      },
+      {
+        path: "admin",
+        element: <Admin />,
       },
       {
         path: "rules",
