@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import session from "express-session";
+import fileUpload from "express-fileupload"
 dotenv.config({
   path: "./.env",
 });
@@ -16,15 +17,19 @@ app.use(
 );
 app.use(
   express.json({
-    limit: "20kb",
+    limit: "2000kb",
   })
 );
-app.use(session({
-  secret: process.env.EXPRESS_SESSION_SECRET, // Replace 'your-secret-key' with a secret string
-  resave: false,
-  saveUninitialized: true,
-  cookie: { secure: false } // Set secure to true if using HTTPS
- }));
+app.use(
+  session({
+    secret: process.env.EXPRESS_SESSION_SECRET, // Replace 'your-secret-key' with a secret string
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }, // Set secure to true if using HTTPS
+  })
+);
+app.use(fileUpload());
+
 // app.use(express.urlencoded({ extend: true, limit: "16kb" }));
 
 import router from "./routes/user.routes.js";

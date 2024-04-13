@@ -152,7 +152,7 @@ const level = async (req, res) => {
   console.log(req.session.lvlNo, "from session");
   console.log(`Querying for "Level No": ${lvlNo}`);
   try {
-    let lvlImg = await Lvl.findOne({ Lvl_no: lvlNo });
+    let lvlImg = await Lvl.findOne({ Lvl_No: lvlNo });
     console.log(`Query result:`, lvlImg);
     lvlImg = lvlImg.Lvl_Img;
     if (!lvlImg) {
@@ -172,21 +172,23 @@ const level = async (req, res) => {
   }
 };
 
+//level Ans Check
 const levelAnsCheck = async (req, res) => {
   const { ans } = req.body;
   // console.log(ans)
   let lvlNo = req.params.lvl;
   try {
     let data = await Lvl.findOne({ Lvl_Ans: ans.toLowerCase() });
-    if (!data) return res.status(404).json(new ApiError(404, "Wrong Answer!"));
-    else
-    {
-      lvlNo =  Number(lvlNo)
-      lvlNo = lvlNo +1
+    if (!data) return res.status(200).json(new ApiError(200, "Wrong Answer!"));
+    else {
+      lvlNo = Number(lvlNo);
+      lvlNo = lvlNo + 1;
       return res.status(200).json(new ApiRes(200, lvlNo, "Correct Answer"));
     }
   } catch (error) {
-    return res.status(500).json(new ApiError(500,"Internal Server Error while submission!"));
+    return res
+      .status(500)
+      .json(new ApiError(500, "Internal Server Error while submission!"));
   }
   // return res.send("Yes!")
 };
