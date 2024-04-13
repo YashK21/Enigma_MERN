@@ -7,11 +7,14 @@ import {
   registerUser,
 } from "../controllers/user.controller.js";
 import verifyJWT from "../middlewares/auth.middleware.js";
+import admin from "../admin/admin.controller.js";
 const router = Router();
 router.route("/register").post(registerUser);
 router.route("/login").post(loginUser);
 router.route("/level/:lvl").get(level);
-router.route("/levelanscheck/:lvl").post(levelAnsCheck)
- router.route("/logout").post(verifyJWT, logoutUser);
+router.route("/levelanscheck/:lvl").post(levelAnsCheck);
+router.route("/logout").post(verifyJWT, logoutUser);
+//admin route
+router.route("/admin").post(admin);
 
 export default router;

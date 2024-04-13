@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const lvlSchema = new mongoose.Schema({
-  Lvl_no: {
+  Lvl_No: {
     type: String,
     required: true,
     unique: true,
