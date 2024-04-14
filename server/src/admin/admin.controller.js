@@ -5,7 +5,7 @@ import ApiError from "../utils/ApiRes.js";
 const admin = async (req, res) => {
 
   //for uploading Lvls
-  let { Lvl_No, Lvl_Ans } = req.body;
+  let { Lvl_No ,Lvl_Ans } = req.body;
   const file = req.files.Lvl_Img;
   // console.log(file);
   if (!file) {

@@ -3,11 +3,19 @@ import ApiError from "../utils/ApiError.js";
 import ApiRes from "../utils/ApiRes.js";
 const genAdminAccessToken = async (adminId) => {
   try {
-    
+    const admin = await Admin.findById(adminId);
+    const adminAccessToken = await admin.genAdminToken();
+    admin.adminAccessToken = adminAccessToken;
+    await admin.save();
+    return { adminAccessToken };
   } catch (error) {
-    
+    return res
+      .status(500)
+      .json(
+        new ApiError(500, "Something went wrong while generating tokens", error)
+      );
   }
-} 
+};
 const adminLogin = async (req, res) => {
   const { username, password } = req.body;
   if (!username) {
@@ -31,17 +39,41 @@ const adminLogin = async (req, res) => {
     return res.status(401).json(new ApiError(404, "Password is wrong!!"));
   }
 
-  const {adminAccessToken} = await Admin.genAdminAccessToken()
-  const loggedInAdmin = await Admin.findById(admin._id).select("-password");
-  return res.status(200).json(
-    new ApiRes(
-      200,
-      {
-        admin: loggedInAdmin,
-      },
-      "Admin logged in successfully"
-    )
+  const { adminAccessToken } = await genAdminAccessToken(admin._id);
+  const loggedInAdmin = await Admin.findById(admin._id).select(
+    "-password -adminAccessToken"
   );
+  // console.log(loggedInAdmin)
+  return res
+    .status(200)
+    .cookie("adminAccessToken", adminAccessToken)
+    .json(
+      new ApiRes(
+        200,
+        {
+          admin: loggedInAdmin,
+          adminAccessToken,
+        },
+        "Admin logged in successfully"
+      )
+    );
 };
-
-export default adminLogin;
+const adminLogout = async (req, res) => {
+  await Admin.findByIdAndUpdate(
+    req.admin._id,
+    {
+      $unset: {
+        adminAccessToken: 1,
+      },
+    },
+    {
+      new: true,
+    }
+  );
+  return res
+    .status(200)
+    .clearCookie("connect.sid")
+    .clearCookie("adminAccessToken")
+    .json(new ApiRes(200, {}, "Admin LoggedOut SuccessFully!"));
+};
+export { adminLogin, adminLogout };
