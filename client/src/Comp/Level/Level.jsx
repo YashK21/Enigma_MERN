@@ -68,12 +68,13 @@ const Level = () => {
     }
   };
   return (
-    <div>
-      Level
-      <br />
-      <h2>Username : {localStorage.getItem("username")}</h2>
+    <div className="text-center">
+      <h1 className="text-3xl font-semibold mb-4">Level {lvl}</h1>
+      <h2 className="text-lg mb-4">
+        Username: {localStorage.getItem("username")}
+      </h2>{" "}
       <img
-        src={lvlImg}
+        src={`data:image/png;base64,${lvlImg}`}
         alt="lvl 1"
         className="mx-auto max-w-screen-lg max-h-screen-3/4"
       />
@@ -84,7 +85,7 @@ const Level = () => {
           placeholder="Enter text here"
           value={lvlAns}
           onChange={(e) => setLvlAns(e.target.value)}
-          class="border-2 border-gray-300 m-4 rounded-md p-2 focus:outline-none focus:border-blue-500 shadow-sm"
+          class="border-2 border-gray-300 m-3 rounded-md p-2 focus:outline-none focus:border-blue-500 shadow-sm"
         />
         <button
           type="submit"
@@ -95,7 +96,12 @@ const Level = () => {
         </button>
         <br />
       </div>
-      <button onClick={handleLogout}>Logout</button>
+      <button
+        className="block mx-auto bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+        onClick={handleLogout}
+      >
+        Logout
+      </button>
     </div>
   );
 };
