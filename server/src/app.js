@@ -17,7 +17,7 @@ app.use(
 );
 app.use(
   express.json({
-    limit: "2000kb",
+    limit: "20kb",
   })
 );
 app.use(
@@ -33,5 +33,7 @@ app.use(fileUpload());
 // app.use(express.urlencoded({ extend: true, limit: "16kb" }));
 
 import router from "./routes/user.routes.js";
+import adminRouter from "./routes/admin.routes.js"
 app.use("/api/v1/", router);
+app.use("/",adminRouter)
 export default app;

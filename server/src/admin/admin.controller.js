@@ -1,9 +1,10 @@
 import { Lvl } from "../model/lvl.model.js";
 import ApiRes from "../utils/ApiRes.js";
 import ApiError from "../utils/ApiRes.js";
-import fs from "fs";
 
 const admin = async (req, res) => {
+
+  //for uploading Lvls
   let { Lvl_No, Lvl_Ans } = req.body;
   const file = req.files.Lvl_Img;
   // console.log(file);
