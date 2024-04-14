@@ -6,7 +6,8 @@ const Level = () => {
   const [lvlImg, setLvlImg] = useState();
   const [lvlAns, setLvlAns] = useState("");
   const navigate = useNavigate();
-  let { lvl } = useParams();
+  let { lvl: initialLvl } = useParams();
+  let [lvl, setLvl] = useState(initialLvl);
   const handleLvlImg = async () => {
     try {
       let res = await fetch(`http://localhost:8000/api/v1/level/${lvl}`, {
@@ -15,13 +16,12 @@ const Level = () => {
       res = await res.json();
       const imgData = await res.message;
       setLvlImg(imgData);
+      return lvl;
     } catch (error) {
-      console.error("Logout failed:", error);
+      console.error("Failed to fetch level image:", error);
     }
   };
-
   const handleLevelAnsCheck = async (e) => {
-    e.preventDefault();
     try {
       let res = await fetch(
         `http://localhost:8000/api/v1/levelanscheck/${lvl}`,
@@ -37,21 +37,23 @@ const Level = () => {
       res = await res.json();
       if (res.success) {
         console.log("Correct Answer!", res.message);
-        lvl = Number(lvl);
-        lvl = lvl + 1;
-        console.log(lvl);
+        // lvl = Number(lvl);
+        // lvl = lvl + 1;
+        // console.log(lvl);
+        setLvl(prevLvl => Number(prevLvl) + 1);
+        setLvlAns("");
       } else {
         console.log("Wrong Answer!", res.errorMessage);
       }
-      setLvlAns("");
-      console.log(res, "from ans check!");
+      // return lvl;
     } catch (error) {
       console.log(error);
     }
   };
   useEffect(() => {
     handleLvlImg();
-  }, [lvlImg]);
+  }, [lvl]);
+
   const handleLogout = async () => {
     try {
       await fetch("http://localhost:8000/api/v1/logout", {
@@ -64,7 +66,6 @@ const Level = () => {
       navigate("/login");
     } catch (error) {
       console.error("Logout failed:", error);
-      // Handle logout failure gracefully
     }
   };
   return (
@@ -75,7 +76,7 @@ const Level = () => {
       </h2>{" "}
       <img
         src={`data:image/png;base64,${lvlImg}`}
-        alt="lvl 1"
+        alt={`Level : ${lvl}`}
         className="mx-auto max-w-screen-lg max-h-screen-3/4"
       />
       <br />
