@@ -10,7 +10,7 @@ import NoAuth from "../NoAuth/NoAuth.jsx";
 import Cookies from "js-cookie";
 import Admin from "../Admin/Admin.jsx";
 import AdminLoginForm from "../Admin/AdminLogin.jsx";
-let accessToken = Cookies.get("accessToken");
+let accessToken = Cookies.get("adminAccessToken");
 const Routes = createBrowserRouter([
   {
     path: "/",
@@ -46,22 +46,25 @@ const Routes = createBrowserRouter([
       },
       {
         path: "/admin/login",
-        element: (
-          <AdminLoginForm/>
-        ),
+        element: <AdminLoginForm />,
       },
       {
         path: "admin",
-        element: <Admin />,
+        element: (
+          <ProtectedAdminRoute>
+            <Admin />
+          </ProtectedAdminRoute>
+        ),
       },
       {
         path: "noauth",
-        element: !accessToken ? <NoAuth/> : <ProtectedUserRoute/>
+        element: !accessToken ? <NoAuth /> : <ProtectedUserRoute />,
       },
     ],
   },
 ]);
 
+// const routes = createBrowserRouter(
 //     createRoutesFromElements(
 //     <Route path="/" element={<Layout />}>
 // <Route path="" element={<Welcome />} />
@@ -81,13 +84,22 @@ const Routes = createBrowserRouter([
 // )
 // );
 function ProtectedUserRoute({ children }) {
-   accessToken = Cookies.get("accessToken");
+  accessToken = Cookies.get("accessToken");
   const isAuth = !!accessToken;
   if (isAuth) {
     return <>{children}</>;
   }
-  return <Navigate to="/noauth"/>;
+  return <Navigate to="/noauth" />;
+}
+
+function ProtectedAdminRoute({ children }) {
+  const adminAccessToken = Cookies.get("adminAccessToken");
+  const isAuth = !!adminAccessToken;
+  if (isAuth) return children;
+  {
+    alert("Trying to act smart? haha! Go login first!");
+  }
+ return <Navigate to="/admin/login"/>
 }
 export default Routes;
 
-// const routes = createBrowserRouter(
