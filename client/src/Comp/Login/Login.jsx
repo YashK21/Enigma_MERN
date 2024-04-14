@@ -28,7 +28,10 @@ const Login = () => {
     console.log(res);
     let user = res.message.user.username
     localStorage.setItem("username",user)
+    setMsg(`${user} ${res.data}`)
+   setTimeout(()=>{
     navigate("/rules");
+   },1000)
   };
   const handleLoginAndSignUp = () => {
     navigate("/signup");
