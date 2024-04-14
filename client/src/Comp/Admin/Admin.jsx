@@ -1,10 +1,12 @@
 import React, { useState, useRef } from "react";
-  
+import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 const Admin = () => {
   const [LvlNo, setLvlNo] = useState("");
   const [LvlImg, setLvlImg] = useState(null);
   const [LvlAns, setLvlAns] = useState("");
-  const formRef = useRef(null)
+  const navigate = useNavigate();
+  const formRef = useRef(null);
   const handleSubmission = async (e) => {
     e.preventDefault();
     try {
@@ -12,20 +14,15 @@ const Admin = () => {
       formData.append("Lvl_No", LvlNo);
       formData.append("Lvl_Img", LvlImg);
       formData.append("Lvl_Ans", LvlAns);
-      let res = await fetch("http://localhost:8000/api/v1/admin", {
+      let res = await fetch("http://localhost:8000/admin", {
         method: "POST",
         body: formData,
         credentials: "include",
       });
       res = await res.json();
-      if (!res.success) alert("Something Went Wrong while Uploading"  );
+      if (!res.success) alert("Something Went Wrong while Uploading");
       else if (res) {
         alert("Upload Successfull");
-        // console.log(res);
-        // setLvlNo("");
-        // setLvlImg(null);
-        // setLvlAns("");
-        // e.target.reset();
         if (formRef.current) {
           formRef.current.reset();
         }
@@ -36,6 +33,21 @@ const Admin = () => {
       }
     } catch (error) {
       console.log(error);
+    }
+  };
+  const handleLogout = async () => {
+    try {
+      await fetch("http://localhost:8000/api/v1/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+      Cookies.remove("connect.sid");
+      Cookies.remove("adminAccessToken");
+      localStorage.clear();
+      navigate("/admin/login");
+    } catch (error) {
+      console.error("Logout failed:", error);
+      // Handle logout failure gracefully
     }
   };
   return (
@@ -97,6 +109,13 @@ const Admin = () => {
           </button>
         </div>
       </form>
+      <br />
+      <button
+        className="block mx-auto bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+        onClick={handleLogout}
+      >
+        Logout
+      </button>
     </>
   );
 };
