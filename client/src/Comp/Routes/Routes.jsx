@@ -10,7 +10,7 @@ import NoAuth from "../NoAuth/NoAuth.jsx";
 import Cookies from "js-cookie";
 import Admin from "../Admin/Admin.jsx";
 import AdminLoginForm from "../Admin/AdminLogin.jsx";
-let accessToken = Cookies.get("adminAccessToken");
+let accessToken = Cookies.get("accessToken");
 const Routes = createBrowserRouter([
   {
     path: "/",
@@ -84,7 +84,7 @@ const Routes = createBrowserRouter([
 // )
 // );
 function ProtectedUserRoute({ children }) {
-  accessToken = Cookies.get("accessToken");
+ const accessToken = Cookies.get("accessToken");
   const isAuth = !!accessToken;
   if (isAuth) {
     return <>{children}</>;

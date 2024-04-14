@@ -72,8 +72,8 @@ const adminLogout = async (req, res) => {
   );
   return res
     .status(200)
-    .clearCookie("connect.sid")
     .clearCookie("adminAccessToken")
+    .clearCookie("connect.sid")
     .json(new ApiRes(200, {}, "Admin LoggedOut SuccessFully!"));
 };
 export { adminLogin, adminLogout };
