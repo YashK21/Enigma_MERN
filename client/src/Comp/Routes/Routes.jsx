@@ -9,6 +9,7 @@ import IntroRules from "../IntroRules/IntroRules.jsx";
 import NoAuth from "../NoAuth/NoAuth.jsx";
 import Cookies from "js-cookie";
 import Admin from "../Admin/Admin.jsx";
+import AdminLoginForm from "../Admin/AdminLogin.jsx";
 let accessToken = Cookies.get("accessToken");
 const Routes = createBrowserRouter([
   {
@@ -28,28 +29,34 @@ const Routes = createBrowserRouter([
         element: <SignUp />,
       },
       {
-        path: "admin",
-        element: <Admin />,
-      },
-      {
         path: "rules",
         element: (
-          <ProtectedRoute>
+          <ProtectedUserRoute>
             <IntroRules />
-          </ProtectedRoute>
+          </ProtectedUserRoute>
         ),
       },
       {
         path: "level/:lvl",
         element: (
-          <ProtectedRoute>
+          <ProtectedUserRoute>
             <Level />
-          </ProtectedRoute>
+          </ProtectedUserRoute>
         ),
       },
       {
+        path: "/admin/login",
+        element: (
+          <AdminLoginForm/>
+        ),
+      },
+      {
+        path: "admin",
+        element: <Admin />,
+      },
+      {
         path: "noauth",
-        element: !accessToken ? <NoAuth/> : <ProtectedRoute/>
+        element: !accessToken ? <NoAuth/> : <ProtectedUserRoute/>
       },
     ],
   },
@@ -73,7 +80,7 @@ const Routes = createBrowserRouter([
 // </Route>
 // )
 // );
-function ProtectedRoute({ children }) {
+function ProtectedUserRoute({ children }) {
    accessToken = Cookies.get("accessToken");
   const isAuth = !!accessToken;
   if (isAuth) {
