@@ -26,7 +26,7 @@ const AdminLoginForm = () => {
     res = await res.json();
     console.log(res.data); 
     let loggedInAdmin = res.message.admin.username
-    localStorage.setItem("username",loggedInAdmin)
+    localStorage.setItem("admin",loggedInAdmin)
     setUsername("");
     setPassword("");
     setMsg(res.data)
