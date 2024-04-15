@@ -5,14 +5,14 @@ import ApiRes from "../utils/ApiRes.js";
 const genAccessTokenandRefreshToken = async (userId) => {
   try {
     const existedUser = await User.findById(userId);
-    const accessToken = existedUser.genAccessToken();
-    const refreshToken = existedUser.genRefreshToken();
+    const userAccessToken = existedUser.genAccessToken();
+    const userRefreshToken = existedUser.genRefreshToken();
 
-    existedUser.refreshToken = refreshToken;
+    existedUser.userRefreshToken = userRefreshToken;
     await existedUser.save({
       validateBeforeSave: false,
     });
-    return { accessToken, refreshToken };
+    return { userAccessToken, userRefreshToken };
   } catch (error) {
     throw new ApiError(
       500,
@@ -50,7 +50,7 @@ const registerUser = async (req, res) => {
 
   //check for saved
   const userSaved = await User.findById(createdUser._id).select(
-    "-password -refreshtoken"
+    "-password -userRefreshToken"
   );
   if (!userSaved) {
     // throw new ApiError(500, "Something went wrong while registration");
@@ -88,12 +88,12 @@ const loginUser = async (req, res) => {
     return res.status(401).json(new ApiError(404, "Password is wrong!!"));
   }
 
-  const { accessToken, refreshToken } = await genAccessTokenandRefreshToken(
+  const { userAccessToken, userRefreshToken } = await genAccessTokenandRefreshToken(
     existedUser._id
   );
 
   const loggedInUser = await User.findById(existedUser._id).select(
-    "-password -refreshToken"
+    "-password -userRefreshToken"
   );
 
   const options = {
@@ -104,15 +104,15 @@ const loginUser = async (req, res) => {
 
   return res
     .status(200)
-    .cookie("accessToken", accessToken, options)
-    .cookie("refreshToken", refreshToken, options)
+    .cookie("userAccessToken", userAccessToken, options)
+    .cookie("userRefreshToken", userRefreshToken, options)
     .json(
       new ApiRes(
         200,
         {
           user: loggedInUser,
-          accessToken,
-          refreshToken,
+          userAccessToken,
+          userRefreshToken,
         },
         "User logged in successfully"
       )
@@ -125,7 +125,7 @@ const logoutUser = async (req, res) => {
     req.user._id,
     {
       $unset: {
-        refreshToken: 1,
+        userRefreshToken: 1,
       },
     },
     {
@@ -139,8 +139,8 @@ const logoutUser = async (req, res) => {
 
   return res
     .status(200)
-    .clearCookie("accessToken", options)
-    .clearCookie("refreshToken", options)
+    .clearCookie("userAccessToken", options)
+    .clearCookie("userRefreshToken", options)
     .clearCookie("connect.sid", options)
     .json(new ApiRes(200, {}, "User LoggedOut SuccessFully!"));
 };
