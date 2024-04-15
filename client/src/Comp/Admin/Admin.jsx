@@ -37,13 +37,13 @@ const Admin = () => {
   };
   const handleLogout = async () => {
     try {
-      await fetch("http://localhost:8000/api/v1/logout", {
+      await fetch("http://localhost:8000/admin/logout", {
         method: "POST",
         credentials: "include",
       });
       Cookies.remove("connect.sid");
       Cookies.remove("adminAccessToken");
-      localStorage.clear();
+      localStorage.removeItem("admin");
       navigate("/admin/login");
     } catch (error) {
       console.error("Logout failed:", error);
