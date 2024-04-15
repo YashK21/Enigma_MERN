@@ -21,7 +21,7 @@ const Level = () => {
       console.error("Failed to fetch level image:", error);
     }
   };
-  const handleLevelAnsCheck = async (e) => {
+  const handleLevelAnsCheck = async () => {
     try {
       let res = await fetch(
         `http://localhost:8000/api/v1/levelanscheck/${lvl}`,
@@ -40,7 +40,7 @@ const Level = () => {
         // lvl = Number(lvl);
         // lvl = lvl + 1;
         // console.log(lvl);
-        setLvl(prevLvl => Number(prevLvl) + 1);
+        setLvl((prevLvl) => Number(prevLvl) + 1);
         setLvlAns("");
       } else {
         console.log("Wrong Answer!", res.errorMessage);
@@ -52,7 +52,8 @@ const Level = () => {
   };
   useEffect(() => {
     handleLvlImg();
-  }, [lvl]);
+    navigate(`/level/${lvl}`); //bcz this makes the url changes from /1 to /2 when lvl changes without this the content only gets changed not the url
+  }, [lvl, navigate]); //Including navigate in the dependency array might seem unnecessary since it's unlikely to change during the component's lifecycle ,included to avoid potential bugs (eg-if conti re-renders due to any reason)
 
   const handleLogout = async () => {
     try {
@@ -60,9 +61,9 @@ const Level = () => {
         method: "POST",
         credentials: "include",
       });
-      Cookies.remove("accessToken");
-      Cookies.remove("refreshToken");
-      localStorage.clear();
+      Cookies.remove("userAccessToken");
+      Cookies.remove("userRefreshToken");
+      localStorage.removeItem("username");
       navigate("/login");
     } catch (error) {
       console.error("Logout failed:", error);
@@ -72,7 +73,8 @@ const Level = () => {
     <div className="text-center">
       <h1 className="text-3xl font-semibold mb-4">Level {lvl}</h1>
       <h2 className="text-lg mb-4">
-        Username: {localStorage.getItem("username")}
+        Username:
+        {localStorage.getItem("username")}
       </h2>{" "}
       <img
         src={`data:image/png;base64,${lvlImg}`}
