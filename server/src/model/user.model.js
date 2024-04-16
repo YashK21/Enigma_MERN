@@ -22,9 +22,15 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, "Password is required"],
   },
-  userRefreshToken :{
-    type:String,
-  }
+  currentLvl: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Lvl",
+  },
+  userRefreshToken: {
+    type: String,
+  },
+},{
+  timestamps:true
 });
 
 userSchema.pre("save", async function (next) {
