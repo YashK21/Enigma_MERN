@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { Lvl } from "../model/lvl.model.js";
 import { User } from "../model/user.model.js";
 import ApiError from "../utils/ApiError.js";
@@ -41,11 +42,15 @@ const registerUser = async (req, res) => {
     return res.status(400).json(new ApiError(400, "User Already Exists"));
   }
 
+  //currentLvl
+  const currentLvl = await Lvl.findOne({ Lvl_No: "1" });
+
   //create
   const createdUser = await User.create({
     email,
     username: username.toLowerCase(),
     password,
+    currentLvl: currentLvl._id,
   });
 
   //check for saved
@@ -88,9 +93,12 @@ const loginUser = async (req, res) => {
     return res.status(401).json(new ApiError(404, "Password is wrong!!"));
   }
 
-  const { userAccessToken, userRefreshToken } = await genAccessTokenandRefreshToken(
-    existedUser._id
-  );
+  if (!username.currentLvl) {
+    let currentLvl = await Lvl.findOne({ Lvl_No: "1" });
+    currentLvl = currentLvl._id;
+  }
+  const { userAccessToken, userRefreshToken } =
+    await genAccessTokenandRefreshToken(existedUser._id);
 
   const loggedInUser = await User.findById(existedUser._id).select(
     "-password -userRefreshToken"
@@ -145,8 +153,8 @@ const logoutUser = async (req, res) => {
     .json(new ApiRes(200, {}, "User LoggedOut SuccessFully!"));
 };
 
-//level
-const level = async (req, res) => {
+// retriving the lvl_img frm db
+const levelImg = async (req, res) => {
   let lvlNo = req.params.lvl;
   req.session.lvlNo = lvlNo;
   console.log(req.session.lvlNo, "from session");
@@ -193,4 +201,64 @@ const levelAnsCheck = async (req, res) => {
   // return res.send("Yes!")
 };
 
-export { registerUser, loginUser, logoutUser, level, levelAnsCheck };
+//currentLvl
+const currentLvl = async (req, res) => {
+  const lvl = await User.aggregate([
+    {
+      $match: {
+        _id: new mongoose.Types.ObjectId(req.user._id),
+      },
+    },
+    {
+      $lookup: {
+        from: "lvls", //frm lvls in db
+        localField: "currentLvl",
+        foreignField: "_id",
+        as: "currentLvl",
+        // pipeline: [
+        //   {
+        //     $lookup: {
+        //       from: "users",
+        //       localField: "currentLvl",
+        //       foreignField: "_id",
+        //       as: "currentLvl",
+        //     },
+        //   },
+        //   {
+        //     $addFields:{
+        //       currentLvl:{
+        //         $first:"$currentLvl"
+        //       }
+        //     }
+        //   }
+        // ],
+      },
+    },
+    {
+      $unwind: "$currentLvl",
+    },
+    {
+      $project: {
+        _id: 0,
+        currentLvl: "$currentLvl",
+      },
+    },
+  ]);
+  if (lvl.length > 0) {
+    return res
+      .status(200)
+      .json(new ApiRes(200, lvl[0].currentLvl, "Current levl of User"));
+  } else {
+    return res
+      .status(404)
+      .json(new ApiError(404, "User not found or no current level set"));
+  }
+};
+export {
+  registerUser,
+  loginUser,
+  logoutUser,
+  levelImg,
+  levelAnsCheck,
+  currentLvl,
+};
