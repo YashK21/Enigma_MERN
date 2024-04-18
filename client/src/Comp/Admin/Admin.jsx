@@ -14,7 +14,7 @@ const Admin = () => {
       formData.append("Lvl_No", LvlNo);
       formData.append("Lvl_Img", LvlImg);
       formData.append("Lvl_Ans", LvlAns);
-      let res = await fetch("http://localhost:8000/admin", {
+      let res = await fetch("https://enigma-mern.onrender.com/admin", {
         method: "POST",
         body: formData,
         credentials: "include",
@@ -37,7 +37,7 @@ const Admin = () => {
   };
   const handleLogout = async () => {
     try {
-      await fetch("http://localhost:8000/admin/logout", {
+      await fetch("https://enigma-mern.onrender.com/admin/logout", {
         method: "POST",
         credentials: "include",
       });

@@ -25,7 +25,7 @@ const Level = () => {
   const handleLevelAnsCheck = async () => {
     try {
       let res = await fetch(
-        `http://localhost:8000/api/v1/levelanscheck/${lvl}`,
+        `https://enigma-mern.onrender.com/api/v1/levelanscheck/${lvl}`,
         {
           method: "POST",
           body: JSON.stringify({ ans: lvlAns }),
@@ -56,7 +56,7 @@ const Level = () => {
 
   const handleCurrentLvl = async () => {
     try {
-      let res = await fetch(`http://localhost:8000/api/v1/level/${lvl}`, {
+      let res = await fetch(`https://enigma-mern.onrender.com/api/v1/level/${lvl}`, {
         credentials: "include",
       });
       res = await res.json();
@@ -77,7 +77,7 @@ const Level = () => {
 
   const handleLogout = async () => {
     try {
-      await fetch("http://localhost:8000/api/v1/logout", {
+      await fetch("https://enigma-mern.onrender.com/api/v1/logout", {
         method: "POST",
         credentials: "include",
       });

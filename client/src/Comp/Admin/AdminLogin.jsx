@@ -8,7 +8,7 @@ const AdminLoginForm = () => {
   const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
-    let res = await fetch("http://localhost:8000/admin/login", {
+    let res = await fetch("https://enigma-mern.onrender.com/admin/login", {
       method: "POST",
       body: JSON.stringify({ username, password }),
       headers: {

@@ -8,7 +8,7 @@ const SignUp = () => {
   const navigate = useNavigate();
   const handleSignUp = async (e) => {
     e.preventDefault();
-    let res = await fetch("http://localhost:8000/api/v1/register", {
+    let res = await fetch("https://enigma-mern.onrender.com/api/v1/register", {
       method: "POST",
       body: JSON.stringify({ username, email, password }),
       headers: {
