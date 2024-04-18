@@ -60,9 +60,7 @@ const Level = () => {
         credentials: "include",
       });
       res = await res.json();
-      const userLvl = await res.message;
-      // console.log(userLvl);
-      // setCurrentLvl(userLvl);
+      // console.log(res)
     } catch (error) {
       console.log(error, "from current lvl");
     }
@@ -86,7 +84,7 @@ const Level = () => {
       Cookies.remove("userAccessToken");
       Cookies.remove("userRefreshToken");
       localStorage.removeItem("username");
-      Cookies.set("currentLvl", lvl, { secure: true, httpOnly: true });
+      // Cookies.set("currentLvl", lvl, { secure: true, httpOnly: true });
       navigate("/login");
     } catch (error) {
       console.error("Logout failed:", error);
