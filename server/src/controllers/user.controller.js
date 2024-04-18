@@ -215,23 +215,6 @@ const currentLvl = async (req, res) => {
         localField: "currentLvl",
         foreignField: "_id",
         as: "currentLvl",
-        // pipeline: [
-        //   {
-        //     $lookup: {
-        //       from: "users",
-        //       localField: "currentLvl",
-        //       foreignField: "_id",
-        //       as: "currentLvl",
-        //     },
-        //   },
-        //   {
-        //     $addFields:{
-        //       currentLvl:{
-        //         $first:"$currentLvl"
-        //       }
-        //     }
-        //   }
-        // ],
       },
     },
     {
