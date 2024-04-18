@@ -3,11 +3,12 @@ import Cookies from "js-cookie";
 import { useNavigate, useParams } from "react-router-dom";
 
 const Level = () => {
-  const [lvlImg, setLvlImg] = useState();
-  const [lvlAns, setLvlAns] = useState("");
+  let [lvlImg, setLvlImg] = useState();
+  let [lvlAns, setLvlAns] = useState("");
   const navigate = useNavigate();
   let { lvl: initialLvl } = useParams();
   let [lvl, setLvl] = useState(initialLvl);
+ 
   const handleLvlImg = async () => {
     try {
       let res = await fetch(`http://localhost:8000/api/v1/level/${lvl}`, {
@@ -37,10 +38,12 @@ const Level = () => {
       res = await res.json();
       if (res.success) {
         console.log("Correct Answer!", res.message);
-        // lvl = Number(lvl);
-        // lvl = lvl + 1;
-        // console.log(lvl);
-        setLvl((prevLvl) => Number(prevLvl) + 1);
+        // lvl = Number(lvl); lvl = lvl + 1; console.log(lvl);
+        setLvl((prevLvl) => {
+          const newLvl = Number(prevLvl) + 1;
+          Cookies.set("currentLvl", newLvl);
+          return newLvl;
+        });
         setLvlAns("");
       } else {
         console.log("Wrong Answer!", res.errorMessage);
@@ -50,9 +53,28 @@ const Level = () => {
       console.log(error);
     }
   };
+
+  const handleCurrentLvl = async () => {
+    try {
+      let res = await fetch(`http://localhost:8000/api/v1/level/${lvl}`, {
+        credentials: "include",
+      });
+      res = await res.json();
+      const userLvl = await res.message;
+      // console.log(userLvl);
+      // setCurrentLvl(userLvl);
+    } catch (error) {
+      console.log(error, "from current lvl");
+    }
+  };
   useEffect(() => {
+    const currentLvl = Cookies.get("currentLvl");
+    if (currentLvl) {
+      setLvl(currentLvl);
+    }
     handleLvlImg();
     navigate(`/level/${lvl}`); //bcz this makes the url changes from /1 to /2 when lvl changes without this the content only gets changed not the url
+    handleCurrentLvl();
   }, [lvl, navigate]); //Including navigate in the dependency array might seem unnecessary since it's unlikely to change during the component's lifecycle ,included to avoid potential bugs (eg-if conti re-renders due to any reason)
 
   const handleLogout = async () => {
@@ -64,6 +86,7 @@ const Level = () => {
       Cookies.remove("userAccessToken");
       Cookies.remove("userRefreshToken");
       localStorage.removeItem("username");
+      Cookies.set("currentLvl", lvl, { secure: true, httpOnly: true });
       navigate("/login");
     } catch (error) {
       console.error("Logout failed:", error);
