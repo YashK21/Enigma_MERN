@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import bg from "../../bgimg/bg.jpg";
 const Welcome = () => {
   const navigate = useNavigate();
+  console.log("first")
   const handleLoginAndSignUp = (e) => {
     if (e.target.id === "login") navigate("/login");
     else if (e.target.id === "signup") navigate("/signup");

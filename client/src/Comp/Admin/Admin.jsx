@@ -1,12 +1,16 @@
 import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+
 const Admin = () => {
+  const localhost = import.meta.env.VITE_LOCALHOST;
+
   const [LvlNo, setLvlNo] = useState("");
   const [LvlImg, setLvlImg] = useState(null);
   const [LvlAns, setLvlAns] = useState("");
   const navigate = useNavigate();
   const formRef = useRef(null);
+
   const handleSubmission = async (e) => {
     e.preventDefault();
     try {
@@ -14,7 +18,7 @@ const Admin = () => {
       formData.append("Lvl_No", LvlNo);
       formData.append("Lvl_Img", LvlImg);
       formData.append("Lvl_Ans", LvlAns);
-      let res = await fetch("https://enigma-mern.onrender.com/admin", {
+      let res = await fetch(`${localhost}/admin`, {
         method: "POST",
         body: formData,
         credentials: "include",
@@ -37,7 +41,7 @@ const Admin = () => {
   };
   const handleLogout = async () => {
     try {
-      await fetch("https://enigma-mern.onrender.com/admin/logout", {
+      await fetch(`${localhost}/admin/logout`, {
         method: "POST",
         credentials: "include",
       });

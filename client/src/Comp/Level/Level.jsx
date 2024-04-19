@@ -3,6 +3,7 @@ import Cookies from "js-cookie";
 import { useNavigate, useParams } from "react-router-dom";
 
 const Level = () => {
+  const localhost = import.meta.env.VITE_LOCALHOST
   let [lvlImg, setLvlImg] = useState();
   let [lvlAns, setLvlAns] = useState("");
   const navigate = useNavigate();
@@ -11,7 +12,7 @@ const Level = () => {
  
   const handleLvlImg = async () => {
     try {
-      let res = await fetch(`https://enigma-mern.onrender.com/api/v1/level/${lvl}`, {
+      let res = await fetch(`${localhost}/api/v1/level/${lvl}`, {
         credentials: "include",
       });
       res = await res.json();
@@ -25,7 +26,7 @@ const Level = () => {
   const handleLevelAnsCheck = async () => {
     try {
       let res = await fetch(
-        `https://enigma-mern.onrender.com/api/v1/levelanscheck/${lvl}`,
+        `${localhost}/api/v1/levelanscheck/${lvl}`,
         {
           method: "POST",
           body: JSON.stringify({ ans: lvlAns }),
@@ -56,7 +57,7 @@ const Level = () => {
 
   const handleCurrentLvl = async () => {
     try {
-      let res = await fetch(`https://enigma-mern.onrender.com/api/v1/level/${lvl}`, {
+      let res = await fetch(`${localhost}/api/v1/level/${lvl}`, {
         credentials: "include",
       });
       res = await res.json();
@@ -77,7 +78,7 @@ const Level = () => {
 
   const handleLogout = async () => {
     try {
-      await fetch("https://enigma-mern.onrender.com/api/v1/logout", {
+      await fetch(`${localhost}/api/v1/logout`, {
         method: "POST",
         credentials: "include",
       });

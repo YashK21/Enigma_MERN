@@ -2,13 +2,14 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const AdminLoginForm = () => {
+  const localhost = import.meta.env.VITE_LOCALHOST
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [msg, setMsg] = useState("");
   const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
-    let res = await fetch("https://enigma-mern.onrender.com/admin/login", {
+    let res = await fetch(`${localhost}/admin/login`, {
       method: "POST",
       body: JSON.stringify({ username, password }),
       headers: {
