@@ -3,7 +3,7 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import session from "express-session";
-import fileUpload from "express-fileupload"
+import fileUpload from "express-fileupload";
 dotenv.config({
   path: "./.env",
 });
@@ -34,7 +34,7 @@ app.use(fileUpload());
 // app.use(express.urlencoded({ extend: true, limit: "16kb" }));
 
 import router from "./routes/user.routes.js";
-import adminRouter from "./routes/admin.routes.js"
+import adminRouter from "./routes/admin.routes.js";
 app.use("/api/v1/", router);
-app.use("/",adminRouter)
+app.use("/", adminRouter);
 export default app;
