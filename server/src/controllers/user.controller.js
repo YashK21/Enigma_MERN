@@ -108,7 +108,7 @@ const loginUser = async (req, res) => {
     httpsOnly: true,
     secure: true,
   };
-
+  console.log(loggedInUser.message)
   return res
     .status(200)
     .cookie("userAccessToken", userAccessToken, options)
