@@ -118,6 +118,8 @@ const loginUser = async (req, res) => {
         200,
         {
           user: loggedInUser,
+          userAccessToken,
+          userRefreshToken
         },
         "User logged in successfully"
       )
@@ -138,8 +140,9 @@ const logoutUser = async (req, res) => {
     }
   );
   const options = {
-    httpsOnly: true,
+    httpOnly: true,
     secure: true,
+    sameSite: "None",
   };
   return res
     .status(200)
