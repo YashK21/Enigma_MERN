@@ -11,7 +11,7 @@ const Level = () => {
  
   const handleLvlImg = async () => {
     try {
-      let res = await fetch(`http://localhost:8000/api/v1/level/${lvl}`, {
+      let res = await fetch(`https://enigma-mern.onrender.com/api/v1/level/${lvl}`, {
         credentials: "include",
       });
       res = await res.json();

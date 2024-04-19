@@ -9,7 +9,7 @@ const Login = () => {
   const handleLogin = async (e) => {
     setMsg("");
     e.preventDefault();
-    let res = await fetch("https://enigma-mern.vercel.app/api/v1/login", {
+    let res = await fetch("https://enigma-mern.onrender.com/api/v1/login", {
       method: "POST",
       body: JSON.stringify({ username, password }),
       headers: {

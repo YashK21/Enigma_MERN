@@ -38,28 +38,3 @@ import adminRouter from "./routes/admin.routes.js"
 app.use("/api/v1/", router);
 app.use("/",adminRouter)
 export default app;
-
-//{
-//   "version": 2,
-//   "builds": [
-//     {
-//       "src": "index.js",
-//       "use": "@vercel/node",
-//       "config": { "includeFiles": ["dist/*"] }
-//     },
-//     {
-//       "src": "cron.js",
-//       "use": "@vercel/node"
-//     }
-//   ],
-//   "routes": [
-//     {
-//       "src": "/(.)",
-//       "dest": "index.js"
-//     }
-//   ],
-//   "crons": [{
-//     "path": "/cron",
-//     "schedule": "0 0 * * *"
-//   }]
-// }
