@@ -11,7 +11,7 @@ const Login = () => {
     setMsg("");
     e.preventDefault();
 
-    let res = await fetch(`https://enigma-mern.onrender.com/api/v1/login`, {
+    let res = await fetch(`${localhost}/api/v1/login`, {
       method: "POST",
       body: JSON.stringify({ username, password }),
       headers: {
