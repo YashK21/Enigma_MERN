@@ -105,8 +105,7 @@ const loginUser = async (req, res) => {
   );
 
   const options = {
-    // httpOnly: true,
-    httpOnly: false,
+    httpsOnly: true,
     secure: true,
   };
 
@@ -141,10 +140,9 @@ const logoutUser = async (req, res) => {
     }
   );
   const options = {
-    httpOnly: true,
+    httpsOnly: true,
     secure: true,
   };
-
   return res
     .status(200)
     .clearCookie("userAccessToken", options)
