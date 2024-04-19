@@ -15,7 +15,6 @@ app.use(
     credentials: true,
   })
 );
-// app.use(cors());
 app.use(
   express.json({
     limit: "20kb",
@@ -26,7 +25,7 @@ app.use(
     secret: process.env.EXPRESS_SESSION_SECRET, // Replace 'your-secret-key' with a secret string
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false }, // Set secure to true if using HTTPS
+    cookie: { httpOnly:false,secure: false }, // Set secure to true if using HTTPS
   })
 );
 app.use(fileUpload());
