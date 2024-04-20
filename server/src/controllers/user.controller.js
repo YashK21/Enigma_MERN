@@ -69,19 +69,15 @@ const registerUser = async (req, res) => {
 //login
 const loginUser = async (req, res) => {
   const { username, password } = req.body;
-  if (!username) {
+  if (!username || !password) {
     // throw new ApiError(400, "username is required");
-    return res.status(400).json(new ApiError(400, "username is required"));
+    return res
+      .status(400)
+      .json(new ApiError(400, "username  and password is required"));
   }
-  if (!password) {
-    return res.status(400).json(new ApiError(400, "password is required"));
-  }
+
   const existedUser = await User.findOne({
-    $or: [
-      {
-        username,
-      },
-    ],
+    username,
   });
   if (!existedUser) {
     // throw new ApiError(404, "User not found");
@@ -107,7 +103,7 @@ const loginUser = async (req, res) => {
   const options = {
     httpOnly: false,
     secure: true,
-    sameSite: "None",
+    sameSite: "none",
   };
   return res
     .status(200)
@@ -119,7 +115,7 @@ const loginUser = async (req, res) => {
         {
           user: loggedInUser,
           userAccessToken,
-          userRefreshToken
+          userRefreshToken,
         },
         "User logged in successfully"
       )
@@ -140,9 +136,9 @@ const logoutUser = async (req, res) => {
     }
   );
   const options = {
-    httpOnly: false,
+    httpOnly: false, // true = restrict from client -side to use cookies
     secure: true,
-    sameSite: "None",
+    sameSite: "none",
   };
   return res
     .status(200)

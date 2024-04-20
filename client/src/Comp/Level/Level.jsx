@@ -42,7 +42,7 @@ const Level = () => {
         // lvl = Number(lvl); lvl = lvl + 1; console.log(lvl);
         setLvl((prevLvl) => {
           const newLvl = Number(prevLvl) + 1;
-          Cookies.set("currentLvl", newLvl);
+          Cookies.set("currentLvl", newLvl,{ sameSite: 'strict' });
           return newLvl;
         });
         setLvlAns("");

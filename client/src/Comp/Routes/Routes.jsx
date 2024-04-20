@@ -85,6 +85,8 @@ const Routes = createBrowserRouter([
 // );
 function ProtectedUserRoute({ children }) {
  const userAccessToken = Cookies.get("userAccessToken");
+ const refresh = Cookies.get("userRefreshToken")
+  console.log(refresh)
   const isAuth = !!userAccessToken;
   if (isAuth) {
     return <>{children}</>;

@@ -22,15 +22,13 @@ app.use(
 );
 app.use(
   session({
-    secret: process.env.EXPRESS_SESSION_SECRET, // Replace 'your-secret-key' with a secret string
+    secret: process.env.EXPRESS_SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
-    cookie: { httpOnly:false,secure: true }, // Set secure to true if using HTTPS
+    cookie: { secure: true },
   })
 );
 app.use(fileUpload());
-
-// app.use(express.urlencoded({ extend: true, limit: "16kb" }));
 
 import router from "./routes/user.routes.js";
 import adminRouter from "./routes/admin.routes.js";
