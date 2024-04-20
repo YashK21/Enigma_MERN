@@ -100,15 +100,20 @@ const loginUser = async (req, res) => {
     "-password -userRefreshToken"
   );
 
-  const options = {
-    httpOnly:false ,
+  const localCookieOptions = {
+    httpOnly:false , //false when in local env
     secure: true,
     sameSite: "none",
   };
+  const prodCookieOptions = {
+    httpOnly:true , //false when in local env
+    secure: true,
+    sameSite: "none",
+  }
   return res
     .status(200)
-    .cookie("userAccessToken", userAccessToken, options)
-    .cookie("userRefreshToken", userRefreshToken, options)
+    .cookie("userAccessToken", userAccessToken, prodCookieOptions)
+    .cookie("userRefreshToken", userRefreshToken, prodCookieOptions)
     .json(
       new ApiRes(
         200,
@@ -135,16 +140,21 @@ const logoutUser = async (req, res) => {
       new: true,
     }
   );
-  const options = {
-    httpOnly:false ,  // true = restrict client -side to use cookies
+  const localCookieOptions = {
+    httpOnly:false ,  // true =when inn prod
+    secure: true,
+    sameSite: "none",
+  };
+  const prodCookieOptions = {
+    httpOnly:true ,  // true =when inn prod
     secure: true,
     sameSite: "none",
   };
   return res
     .status(200)
-    .clearCookie("userAccessToken", options)
-    .clearCookie("userRefreshToken", options)
-    .clearCookie("connect.sid", options)
+    .clearCookie("userAccessToken", prodCookieOptions)
+    .clearCookie("userRefreshToken", prodCookieOptions)
+    // .clearCookie("connect.sid", localCookieOptions)
     .json(new ApiRes(200, {}, "User LoggedOut SuccessFully!"));
 };
 
