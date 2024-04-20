@@ -9,8 +9,8 @@ export default defineConfig({
  },
  server: {
   proxy: {
-    '/api': {
-      target: 'https://enigma-mern.onrender.com',
+    '/api/v1': {
+      target: `${process.env.VITE_LOCALHOST}`,
       changeOrigin: true,
       rewrite: (path) => path.replace(/^\/api/, '')
     }
