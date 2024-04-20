@@ -101,7 +101,7 @@ const loginUser = async (req, res) => {
   );
 
   const options = {
-    httpOnly: false,
+    HttpOnly: false,
     secure: true,
     sameSite: "none",
   };
@@ -136,7 +136,8 @@ const logoutUser = async (req, res) => {
     }
   );
   const options = {
-    httpOnly: false, // true = restrict from client -side to use cookies
+    HttpOnly: false,
+    // true = restrict client -side to use cookies
     secure: true,
     sameSite: "none",
   };
