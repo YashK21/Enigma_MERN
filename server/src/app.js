@@ -28,7 +28,6 @@ app.use(
     cookie: { secure: true },
   })
 );
-app.set("trust proxy", 1)
 app.use(fileUpload());
 
 import router from "./routes/user.routes.js";
