@@ -85,10 +85,9 @@ const Routes = createBrowserRouter([
 // );
 function ProtectedUserRoute({ children }) {
  const userAccessToken = Cookies.get("userAccessToken");
- const refresh = Cookies.get("userRefreshToken")
-  console.log(refresh)
-  const isAuth = !!userAccessToken;
-  if (isAuth) {
+  console.log(userAccessToken)
+  // const isAuth = !!userAccessToken;
+  if (userAccessToken) {
     return <>{children}</>;
   }
   return <Navigate to="/noauth" />;
