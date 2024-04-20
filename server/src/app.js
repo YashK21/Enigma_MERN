@@ -26,9 +26,9 @@ app.use(
     resave: false,
     saveUninitialized: true,
     cookie: { secure: true },
-    sameSite: "none"
   })
 );
+app.set("trust proxy", 1)
 app.use(fileUpload());
 
 import router from "./routes/user.routes.js";
