@@ -101,19 +101,20 @@ const loginUser = async (req, res) => {
   );
 
   const localCookieOptions = {
-    httpOnly:false , //false when in local env
+    httpOnly: false,
+    secure: false,
+  };
+
+  const prodCookieOptions = {
+    httpOnly: true, //false when in local env
     secure: true,
     sameSite: "none",
   };
-  const prodCookieOptions = {
-    httpOnly:true , //false when in local env
-    secure: true,
-    sameSite: "none",
-  }
   return res
     .status(200)
     .cookie("userAccessToken", userAccessToken, prodCookieOptions)
     .cookie("userRefreshToken", userRefreshToken, prodCookieOptions)
+    .cookie("connect.sid",prodCookieOptions)
     .json(
       new ApiRes(
         200,
@@ -141,21 +142,22 @@ const logoutUser = async (req, res) => {
     }
   );
   const localCookieOptions = {
-    httpOnly:false ,  // true =when inn prod
-    secure: true,
-    sameSite: "none",
+    httpOnly: false,
+    secure: false,
   };
   const prodCookieOptions = {
-    httpOnly:true ,  // true =when inn prod
+    httpOnly: true, // true =when inn prod
     secure: true,
     sameSite: "none",
   };
-  return res
-    .status(200)
-    .clearCookie("userAccessToken", prodCookieOptions)
-    .clearCookie("userRefreshToken", prodCookieOptions)
-    // .clearCookie("connect.sid", localCookieOptions)
-    .json(new ApiRes(200, {}, "User LoggedOut SuccessFully!"));
+  return (
+    res
+      .status(200)
+      .clearCookie("userAccessToken", prodCookieOptions)
+      .clearCookie("userRefreshToken", prodCookieOptions)
+      .clearCookie("connect.sid", prodCookieOptions)
+      .json(new ApiRes(200, {}, "User LoggedOut SuccessFully!"))
+  );
 };
 
 // retriving the lvl_img frm db
