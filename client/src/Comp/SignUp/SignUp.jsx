@@ -4,13 +4,15 @@ import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
   const localhost = import.meta.env.VITE_LOCALHOST
+  const produrl = import.meta.env.VITE_PROD
+
   const [username, setUserName] = useState();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const navigate = useNavigate();
   const handleSignUp = async (e) => {
     e.preventDefault();
-    let res = await fetch(`${localhost}/api/v1/register`, {
+    let res = await fetch(`${produrl}/api/v1/register`, {
       method: "POST",
       body: JSON.stringify({ username, email, password }),
       headers: {
