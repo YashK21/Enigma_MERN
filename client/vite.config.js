@@ -9,7 +9,7 @@ export default defineConfig({
  },
  server: {
   proxy: {
-    '/api/v1': {
+    '/api': {
       target: `${process.env.VITE_LOCALHOST}`,
       changeOrigin: true,
       rewrite: (path) => path.replace(/^\/api/, '')
