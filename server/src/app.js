@@ -20,17 +20,16 @@ app.use(
     limit: "20kb",
   })
 );
-app.use(
-  session({
-    secret: process.env.EXPRESS_SESSION_SECRET,
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: false, httpOnly: false },
-  })
-);
-if (app.get('env') === 'production') {
-  app.set('trust proxy', 1) // trust first proxy
-  sess.cookie.secure = true // serve secure cookies
+let sessionValue = {
+  secret: process.env.EXPRESS_SESSION_SECRET,
+  resave: false,
+  saveUninitialized: true,
+  cookie: { httpOnly: false },
+};
+app.use(session(sessionValue));
+if (app.get("env") === "production") {
+  app.set("trust proxy", 1); // trust first proxy
+  sessionValue.cookie.secure = true; // serve secure cookies
 }
 app.use(fileUpload());
 
