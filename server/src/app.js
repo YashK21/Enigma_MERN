@@ -26,10 +26,6 @@ let sessionValue = {
   saveUninitialized: true,
   cookie: { httpOnly: false },
 };
-if (app.get("env") === "production") {
-  app.set("trust proxy", 1); // trust first proxy
-  sessionValue.cookie.secure = true; // serve secure cookies
-}
 app.use(session(sessionValue));
 app.use(fileUpload());
 
