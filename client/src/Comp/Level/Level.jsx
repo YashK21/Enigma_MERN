@@ -10,7 +10,7 @@ const Level = () => {
   const navigate = useNavigate();
   let { lvl: initialLvl } = useParams();
   let [lvl, setLvl] = useState(initialLvl);
-
+  
   const handleLvlImg = async () => {
     try {
       let res = await fetch(`${prodUrl}/api/v1/level/${lvl}`, {
@@ -83,7 +83,6 @@ const Level = () => {
       Cookies.remove("userAccessToken");
       Cookies.remove("userRefreshToken");
       localStorage.removeItem("username");
-      // Cookies.set("currentLvl", lvl, { secure: true, httpOnly: true });
       navigate("/login");
     } catch (error) {
       console.error("Logout failed:", error);

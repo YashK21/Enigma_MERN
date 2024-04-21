@@ -81,9 +81,9 @@ const Routes = createBrowserRouter([
 // </Route>
 // )
 // );
+console.log(Cookies)
  function ProtectedUserRoute({ children }) {
   let userAccessToken = Cookies.get("userAccessToken");
-  console.log(userAccessToken)
   // const isAuth =  userAccessToken;
   // console.log(isAuth)
   if (userAccessToken) {
