@@ -83,6 +83,7 @@ const loginUser = async (req, res) => {
     // throw new ApiError(404, "User not found");
     return res.status(400).json(new ApiError(404, "User not found"));
   }
+
   const passwordValid = await existedUser.passCheck(password);
   if (!passwordValid) {
     // throw new ApiError(401, "Password is wrong!!");
@@ -106,7 +107,7 @@ const loginUser = async (req, res) => {
   };
 
   const prodCookieOptions = {
-    httpOnly: true, //false when in local env
+    httpOnly: false, 
     secure: true,
     sameSite: "none",
   };
@@ -114,7 +115,7 @@ const loginUser = async (req, res) => {
     .status(200)
     .cookie("userAccessToken", userAccessToken, prodCookieOptions)
     .cookie("userRefreshToken", userRefreshToken, prodCookieOptions)
-    .cookie("connect.sid",prodCookieOptions)
+    .cookie("connect.sid", prodCookieOptions)
     .json(
       new ApiRes(
         200,
@@ -146,25 +147,23 @@ const logoutUser = async (req, res) => {
     secure: false,
   };
   const prodCookieOptions = {
-    httpOnly: true, // true =when inn prod
+    httpOnly: false, // true =when inn prod
     secure: true,
     sameSite: "none",
   };
-  return (
-    res
-      .status(200)
-      .clearCookie("userAccessToken", prodCookieOptions)
-      .clearCookie("userRefreshToken", prodCookieOptions)
-      .clearCookie("connect.sid", prodCookieOptions)
-      .json(new ApiRes(200, {}, "User LoggedOut SuccessFully!"))
-  );
+  return res
+    .status(200)
+    .clearCookie("userAccessToken", prodCookieOptions)
+    .clearCookie("userRefreshToken", prodCookieOptions)
+    .clearCookie("connect.sid", prodCookieOptions)
+    .json(new ApiRes(200, {}, "User LoggedOut SuccessFully!"));
 };
 
 // retriving the lvl_img frm db
 const levelImg = async (req, res) => {
   let lvlNo = req.params.lvl;
+  console.log(lvlNo);
   req.session.lvlNo = lvlNo;
-  console.log(req.session.lvlNo, "from session");
   console.log(`Querying for "Level No": ${lvlNo}`);
   try {
     let lvlImg = await Lvl.findOne({ Lvl_No: lvlNo });

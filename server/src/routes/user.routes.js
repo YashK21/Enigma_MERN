@@ -10,6 +10,7 @@
   import { verifyJWT } from "../middlewares/auth.middleware.js";
   const router = Router();
   router.route("/register").post(registerUser);
+  // console.log("before login from user.rouye")
   router.route("/login").post(loginUser);
   router.route("/level/:lvl").get(verifyJWT, levelImg);
   router.route("/levelanscheck/:lvl").post(verifyJWT, levelAnsCheck);
