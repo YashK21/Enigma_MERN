@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 const Login = () => {
   const localhost = import.meta.env.VITE_LOCALHOST
   const produrl = import.meta.env.VITE_PROD
@@ -14,7 +15,7 @@ const Login = () => {
       method: "POST",
       body: JSON.stringify({ username, password }),
       headers: {
-        "Content-Type": "application/json",
+        "content-Type": "application/json",
       },
       credentials: "include",
     });

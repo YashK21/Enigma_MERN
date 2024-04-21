@@ -9,14 +9,12 @@ dotenv.config({
 });
 const app = express();
 app.use(cookieParser());
-
 app.use(
   cors({
     origin: process.env.CORS_ORIGIN,
     credentials: true,
   })
 );
-// console.log(typeof process.env.EXPRESS_SESSION_SECRET);
 app.use(
   express.json({
     limit: "20kb",
@@ -27,8 +25,7 @@ app.use(
     secret: process.env.EXPRESS_SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
-    sameSite:"none",
-    cookie: { secure: true, httpOnly  :false },
+    cookie: { secure: false, httpOnly: false },
   })
 );
 app.use(fileUpload());

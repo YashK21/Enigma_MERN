@@ -3,17 +3,17 @@ import Cookies from "js-cookie";
 import { useNavigate, useParams } from "react-router-dom";
 
 const Level = () => {
-  const localhost = import.meta.env.VITE_LOCALHOST
-  const produrl = import.meta.env.VITE_PROD
+  const localhost = import.meta.env.VITE_LOCALHOST;
+  const prodUrl = import.meta.env.VITE_PROD;
   let [lvlImg, setLvlImg] = useState();
   let [lvlAns, setLvlAns] = useState("");
   const navigate = useNavigate();
   let { lvl: initialLvl } = useParams();
   let [lvl, setLvl] = useState(initialLvl);
- 
+
   const handleLvlImg = async () => {
     try {
-      let res = await fetch(`${produrl}/api/v1/level/${lvl}`, {
+      let res = await fetch(`${prodUrl}/api/v1/level/${lvl}`, {
         credentials: "include",
       });
       res = await res.json();
@@ -26,24 +26,21 @@ const Level = () => {
   };
   const handleLevelAnsCheck = async () => {
     try {
-      let res = await fetch(
-        `${localhost}/api/v1/levelanscheck/${lvl}`,
-        {
-          method: "POST",
-          body: JSON.stringify({ ans: lvlAns }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        }
-      );
+      let res = await fetch(`${prodUrl}/api/v1/levelanscheck/${lvl}`, {
+        method: "POST",
+        body: JSON.stringify({ ans: lvlAns }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
       res = await res.json();
       if (res.success) {
         console.log("Correct Answer!", res.message);
         // lvl = Number(lvl); lvl = lvl + 1; console.log(lvl);
         setLvl((prevLvl) => {
           const newLvl = Number(prevLvl) + 1;
-          Cookies.set("currentLvl", newLvl,{ sameSite: 'strict' });
+          Cookies.set("currentLvl", newLvl, { sameSite: "strict" });
           return newLvl;
         });
         setLvlAns("");
@@ -58,7 +55,7 @@ const Level = () => {
 
   const handleCurrentLvl = async () => {
     try {
-      let res = await fetch(`${localhost}/api/v1/level/${lvl}`, {
+      let res = await fetch(`${prodUrl}/api/v1/level/${lvl}`, {
         credentials: "include",
       });
       res = await res.json();
@@ -79,7 +76,7 @@ const Level = () => {
 
   const handleLogout = async () => {
     try {
-      await fetch(`${localhost}/api/v1/logout`, {
+      await fetch(`${prodUrl}/api/v1/logout`, {
         method: "POST",
         credentials: "include",
       });
