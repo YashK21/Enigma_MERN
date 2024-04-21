@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 const Login = () => {
   const localhost = import.meta.env.VITE_LOCALHOST
   const produrl = import.meta.env.VITE_PROD
@@ -11,12 +10,11 @@ const Login = () => {
   const handleLogin = async (e) => {
     setMsg("");
     e.preventDefault();
-
     let res = await fetch(`${produrl}/api/v1/login`, {
       method: "POST",
       body: JSON.stringify({ username, password }),
       headers: {
-        "content-Type": "application/json",
+        "Content-Type": "application/json",
       },
       credentials: "include",
     });

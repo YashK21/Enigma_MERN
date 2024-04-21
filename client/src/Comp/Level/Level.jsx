@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 const Level = () => {
   const localhost = import.meta.env.VITE_LOCALHOST
+  const produrl = import.meta.env.VITE_PROD
   let [lvlImg, setLvlImg] = useState();
   let [lvlAns, setLvlAns] = useState("");
   const navigate = useNavigate();
@@ -12,7 +13,7 @@ const Level = () => {
  
   const handleLvlImg = async () => {
     try {
-      let res = await fetch(`${localhost}/api/v1/level/${lvl}`, {
+      let res = await fetch(`${produrl}/api/v1/level/${lvl}`, {
         credentials: "include",
       });
       res = await res.json();
