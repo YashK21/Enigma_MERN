@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Navigate, createBrowserRouter } from "react-router-dom";
 import Layout from "../Layout/Layout.jsx";
 import Welcome from "../Welcome/Welcome.jsx";
@@ -57,7 +57,7 @@ const Routes = createBrowserRouter([
       },
       {
         path: "noauth",
-        element: <NoAuth/>,
+        element: <NoAuth />,
       },
     ],
   },
@@ -81,15 +81,24 @@ const Routes = createBrowserRouter([
 // </Route>
 // )
 // );
-console.log(Cookies)
- function ProtectedUserRoute({ children }) {
-  let userAccessToken = Cookies.get("userAccessToken");
-  // const isAuth =  userAccessToken;
-  // console.log(isAuth)
-  if (userAccessToken) {
-    return <>{children}</>;
+function ProtectedUserRoute({ children }) {
+  const [isLoading, setIsLoading] = useState(true);
+  const [isAuth, setIsAuth] = useState(false);
+  useEffect(() => {
+    let userAccessToken = Cookies.get("userAccessToken");
+    if (userAccessToken) {
+      setIsAuth(true);
+    }
+    setIsLoading(false);
+  }, []);
+  if (isLoading) {
+    return <div>Loading...</div>; // Or any loading indicator
   }
-  return <Navigate to="/noauth" />;
+  if (!isAuth) {
+    return <Navigate to="/noauth" />;
+  }
+
+  return children;
 }
 
 function ProtectedAdminRoute({ children }) {
@@ -99,7 +108,6 @@ function ProtectedAdminRoute({ children }) {
   {
     alert("Trying to act smart? haha! Go login first!");
   }
- return <Navigate to="/admin/login"/>
+  return <Navigate to="/admin/login" />;
 }
 export default Routes;
-
