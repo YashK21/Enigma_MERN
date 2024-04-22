@@ -82,25 +82,10 @@ const Routes = createBrowserRouter([
 // )
 // );
 function ProtectedUserRoute({ children }) {
-  const [isLoading, setIsLoading] = useState(true);
-  const [isAuth, setIsAuth] = useState(false);
-  console.log("from ProtectedUserRoute ")
-  useEffect(() => {
-    let userAccessToken = Cookies.get("userAccessToken");
-    if (userAccessToken) {
-      setIsAuth(true);
-    }
-    setIsLoading(false);
-  }, []);
-  if (isLoading) {
-    return <div>Loading...</div>; // Or any loading indicator
-  }
-  if (!isAuth) {
-    return <Navigate to="/noauth" />;
-  }
-
-  return children;
-}
+const userAccessToken = Cookies.get("userAccessToken")
+const isAuth = !!userAccessToken
+if(isAuth) return {children}
+return <Navigate to="/noauth" />;}
 
 function ProtectedAdminRoute({ children }) {
   const adminAccessToken = Cookies.get("adminAccessToken");
