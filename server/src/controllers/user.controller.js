@@ -108,7 +108,7 @@ const loginUser = async (req, res) => {
   const prodCookieOptions = {
     httpOnly: true, //false when in local env
     secure: true,
-    SameSite: "none",
+    sameSite: "none",
   };
   return res
     .status(200)

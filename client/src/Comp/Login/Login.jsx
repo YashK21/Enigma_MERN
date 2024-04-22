@@ -1,44 +1,53 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const localhost = import.meta.env.VITE_prodUrl
-  const prodUrl = import.meta.env.VITE_PROD
+  const localhost = import.meta.env.VITE_prodUrl;
+  const prodUrl = import.meta.env.VITE_PROD;
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [msg, setMsg] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
-  try {
-    const handleLogin = async (e) => {
-      setMsg("");
-      e.preventDefault();
-      let res = await fetch(`${prodUrl}/api/v1/login`, {
-        method: "POST",
-        body: JSON.stringify({ username, password }),
-        headers: {
-          "content-Type": "application/json",
-        },
-        credentials: "include",
-      });
-      if (!res.ok) {
-        res = await res.json();
-        console.log(res.ok);
-        console.log(res?.errorMessage);
-        return setMsg(res?.errorMessage);
-      }
-      res = await res.json()
-      // console.log(typeof res);
-      console.log(res);
-      let user = res.message.user.username
-      localStorage.setItem("username",user)
-      setMsg(`${user} ${res.data}`)
-     setTimeout(()=>{
+  useEffect(() => {
+    const userAccessToken = Cookies.get("userAccessToken");
+    if (userAccessToken) {
+      setIsAuthenticated(true);
+    }
+  }, []);
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setMsg("");
+    let res = await fetch(`${prodUrl}/api/v1/login`, {
+      method: "POST",
+      body: JSON.stringify({ username, password }),
+      headers: {
+        "content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+    if (!res.ok) {
+      // res = await res.json();
+      // console.log(res?.errorMessage);
+      // return setMsg(res?.errorMessage);
+      const errorData = await res.json();
+      console.log(errorData);
+      setMsg(errorData);
+      return;
+    }
+    res = await res.json();
+    // console.log(res);
+    let user = res.message.user.username;
+    localStorage.setItem("username", user);
+    setMsg(`${user} ${res.data}`);
+    setIsAuthenticated(true);
+  };
+  useEffect(() => {
+    setTimeout(() => {
       navigate("/rules");
-     },1000)
-    };
-  } catch (error) {
-    console.error('Error logging in:', error);
-  }
+    }, 1000);
+  }, [isAuthenticated, navigate]);
+
   const handleLoginAndSignUp = () => {
     navigate("/signup");
   };
