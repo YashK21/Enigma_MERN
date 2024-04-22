@@ -75,6 +75,7 @@ const Level = () => {
   }, [lvl, navigate]); //Including navigate in the dependency array might seem unnecessary since it's unlikely to change during the component's lifecycle ,included to avoid potential bugs (eg-if conti re-renders due to any reason)
 
   const handleLogout = async () => {
+    console.log("handle logout ")
     try {
       await fetch(`${prodUrl}/api/v1/logout`, {
         method: "POST",

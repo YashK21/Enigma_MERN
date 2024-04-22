@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const localhost = import.meta.env.VITE_LOCALHOST
-  const prodUrl = import.meta.env.VITE_PROD
+  const localhost = import.meta.env.VITE_LOCALHOST;
+  const prodUrl = import.meta.env.VITE_PROD;
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [msg, setMsg] = useState("");
@@ -19,21 +19,22 @@ const Login = () => {
       },
       credentials: "include",
     });
+
     if (!res.ok) {
       res = await res.json();
       console.log(res.ok);
       console.log(res?.errorMessage);
       return setMsg(res?.errorMessage);
     }
-    res = await res.json()
+    res = await res.json();
     // console.log(typeof res);
     console.log(res);
-    let user = res.message.user.username
-    localStorage.setItem("username",user)
-    setMsg(`${user} ${res.data}`)
-   setTimeout(()=>{
-    navigate("/rules");
-   },1000)
+    let user = res.message.user.username;
+    localStorage.setItem("username", user);
+    setMsg(`${user} ${res.data}`);
+    setTimeout(() => {
+      navigate("/rules");
+    }, 1000);
   };
   const handleLoginAndSignUp = () => {
     navigate("/signup");

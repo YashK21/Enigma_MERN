@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Navigate, createBrowserRouter } from "react-router-dom";
 import Layout from "../Layout/Layout.jsx";
 import Welcome from "../Welcome/Welcome.jsx";
