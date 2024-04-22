@@ -8,33 +8,37 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [msg, setMsg] = useState("");
   const navigate = useNavigate();
-  const handleLogin = async (e) => {
-    setMsg("");
-    e.preventDefault();
-    let res = await fetch(`${prodUrl}/api/v1/login`, {
-      method: "POST",
-      body: JSON.stringify({ username, password }),
-      headers: {
-        "content-Type": "application/json",
-      },
-      credentials: "include",
-    });
-    if (!res.ok) {
-      res = await res.json();
-      console.log(res.ok);
-      console.log(res?.errorMessage);
-      return setMsg(res?.errorMessage);
-    }
-    res = await res.json()
-    // console.log(typeof res);
-    console.log(res);
-    let user = res.message.user.username
-    localStorage.setItem("username",user)
-    setMsg(`${user} ${res.data}`)
-   setTimeout(()=>{
-    navigate("/rules");
-   },1000)
-  };
+  try {
+    const handleLogin = async (e) => {
+      setMsg("");
+      e.preventDefault();
+      let res = await fetch(`${prodUrl}/api/v1/login`, {
+        method: "POST",
+        body: JSON.stringify({ username, password }),
+        headers: {
+          "content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+      if (!res.ok) {
+        res = await res.json();
+        console.log(res.ok);
+        console.log(res?.errorMessage);
+        return setMsg(res?.errorMessage);
+      }
+      res = await res.json()
+      // console.log(typeof res);
+      console.log(res);
+      let user = res.message.user.username
+      localStorage.setItem("username",user)
+      setMsg(`${user} ${res.data}`)
+     setTimeout(()=>{
+      navigate("/rules");
+     },1000)
+    };
+  } catch (error) {
+    console.error('Error logging in:', error);
+  }
   const handleLoginAndSignUp = () => {
     navigate("/signup");
   };
