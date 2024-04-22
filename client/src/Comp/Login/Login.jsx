@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const localhost = import.meta.env.VITE_LOCALHOST
+  const localhost = import.meta.env.VITE_prodUrl
   const prodUrl = import.meta.env.VITE_PROD
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");

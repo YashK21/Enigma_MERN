@@ -84,6 +84,7 @@ const Routes = createBrowserRouter([
 function ProtectedUserRoute({ children }) {
   const [isLoading, setIsLoading] = useState(true);
   const [isAuth, setIsAuth] = useState(false);
+  console.log("from ProtectedUserRoute ")
   useEffect(() => {
     let userAccessToken = Cookies.get("userAccessToken");
     if (userAccessToken) {
