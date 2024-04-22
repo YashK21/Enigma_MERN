@@ -4,7 +4,7 @@ import Cookies from "js-cookie";
 
 const Admin = () => {
   const localhost = import.meta.env.VITE_LOCALHOST;
-
+  const prodUrl = import.meta.env.VITE_PROD
   const [LvlNo, setLvlNo] = useState("");
   const [LvlImg, setLvlImg] = useState(null);
   const [LvlAns, setLvlAns] = useState("");
@@ -18,7 +18,7 @@ const Admin = () => {
       formData.append("Lvl_No", LvlNo);
       formData.append("Lvl_Img", LvlImg);
       formData.append("Lvl_Ans", LvlAns);
-      let res = await fetch(`${localhost}/admin`, {
+      let res = await fetch(`${prod}/admin`, {
         method: "POST",
         body: formData,
         credentials: "include",
@@ -41,7 +41,7 @@ const Admin = () => {
   };
   const handleLogout = async () => {
     try {
-      await fetch(`${localhost}/admin/logout`, {
+      await fetch(`${prodUrl}/admin/logout`, {
         method: "POST",
         credentials: "include",
       });
