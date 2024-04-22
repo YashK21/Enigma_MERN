@@ -10,38 +10,6 @@ import NoAuth from "../NoAuth/NoAuth.jsx";
 import Cookies from "js-cookie";
 import Admin from "../Admin/Admin.jsx";
 import AdminLoginForm from "../Admin/AdminLogin.jsx";
-function ProtectedUserRoute({ children }) {
-  const [isLoading, setIsLoading] = useState(true);
-  const [isAuth, setIsAuth] = useState(false);
-  console.log("from ProtectedUserRoute ")
-  useEffect(() => {
-    let userAccessToken = Cookies.get("userAccessToken");
-    if (userAccessToken) {
-      setIsAuth(true);
-    }
-    setIsLoading(false);
-  }, []);
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-  if (!isAuth) {
-    return <Navigate to="/noauth" />;
-  }
-
-  return children;
-}
-
-function ProtectedAdminRoute({ children }) {
-  const adminAccessToken = Cookies.get("adminAccessToken");
-  const isAuth = !!adminAccessToken;
-  if (isAuth) return children;
-  {
-    alert("Trying to act smart? haha! Go login first!");
-  }
-  return <Navigate to="/admin/login" />;
-}
-export default Routes;
-
 const Routes = createBrowserRouter([
   {
     path: "/",
@@ -113,3 +81,34 @@ const Routes = createBrowserRouter([
 // </Route>
 // )
 // );
+function ProtectedUserRoute({ children }) {
+  const [isLoading, setIsLoading] = useState(true);
+  const [isAuth, setIsAuth] = useState(false);
+  console.log("from ProtectedUserRoute ")
+  useEffect(() => {
+    let userAccessToken = Cookies.get("userAccessToken");
+    if (userAccessToken) {
+      setIsAuth(true);
+    }
+    setIsLoading(false);
+  }, []);
+  if (isLoading) {
+    return <div>Loading...</div>; // Or any loading indicator
+  }
+  if (!isAuth) {
+    return <Navigate to="/noauth" />;
+  }
+
+  return children;
+}
+
+function ProtectedAdminRoute({ children }) {
+  const adminAccessToken = Cookies.get("adminAccessToken");
+  const isAuth = !!adminAccessToken;
+  if (isAuth) return children;
+  {
+    alert("Trying to act smart? haha! Go login first!");
+  }
+  return <Navigate to="/admin/login" />;
+}
+export default Routes;

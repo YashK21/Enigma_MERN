@@ -1,23 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const localhost = import.meta.env.VITE_prodUrl;
-  const prodUrl = import.meta.env.VITE_PROD;
+  const localhost = import.meta.env.VITE_prodUrl
+  const prodUrl = import.meta.env.VITE_PROD
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [msg, setMsg] = useState("");
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
-  useEffect(() => {
-    const userAccessToken = Cookies.get("userAccessToken");
-    if (userAccessToken) {
-      setIsAuthenticated(true);
-    }
-  }, []);
   const handleLogin = async (e) => {
-    e.preventDefault();
     setMsg("");
+    e.preventDefault();
     let res = await fetch(`${prodUrl}/api/v1/login`, {
       method: "POST",
       body: JSON.stringify({ username, password }),
@@ -27,27 +20,21 @@ const Login = () => {
       credentials: "include",
     });
     if (!res.ok) {
-      // res = await res.json();
-      // console.log(res?.errorMessage);
-      // return setMsg(res?.errorMessage);
-      const errorData = await res.json();
-      console.log(errorData);
-      setMsg(errorData);
-      return;
+      res = await res.json();
+      console.log(res.ok);
+      console.log(res?.errorMessage);
+      return setMsg(res?.errorMessage);
     }
-    res = await res.json();
-    // console.log(res);
-    let user = res.message.user.username;
-    localStorage.setItem("username", user);
-    setMsg(`${user} ${res.data}`);
-    setIsAuthenticated(true);
+    res = await res.json()
+    // console.log(typeof res);
+    console.log(res);
+    let user = res.message.user.username
+    localStorage.setItem("username",user)
+    setMsg(`${user} ${res.data}`)
+   setTimeout(()=>{
+    navigate("/rules");
+   },1000)
   };
-  useEffect(() => {
-    setTimeout(() => {
-      navigate("/rules");
-    }, 1000);
-  }, [isAuthenticated, navigate]);
-
   const handleLoginAndSignUp = () => {
     navigate("/signup");
   };
