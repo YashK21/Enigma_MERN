@@ -24,7 +24,7 @@ let sessionValue = {
   secret: process.env.EXPRESS_SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
-  cookie: { httpOnly: false },
+  cookie: { httpOnly: true,secure:true },
 };
 app.use(session(sessionValue));
 app.use(fileUpload());
