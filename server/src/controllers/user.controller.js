@@ -109,12 +109,13 @@ const loginUser = async (req, res) => {
     httpOnly: true, //false when in local env
     secure: true,
     sameSite: "none",
+    expires: new Date(Date.now() + 3600000),
   };
   return res
     .status(200)
-    .cookie("userAccessToken", userAccessToken, localCookieOptions)
-    .cookie("userRefreshToken", userRefreshToken, localCookieOptions)
-    .cookie("connect.sid",localCookieOptions)
+    .cookie("userAccessToken", userAccessToken, prodCookieOptions)
+    .cookie("userRefreshToken", userRefreshToken, prodCookieOptions)
+    .cookie("connect.sid",prodCookieOptions)
     .json(
       new ApiRes(
         200,
@@ -149,13 +150,14 @@ const logoutUser = async (req, res) => {
     httpOnly: true, // true =when inn prod
     secure: true,
     sameSite: "none",
+    expires: new Date(Date.now() + 3600000),
   };
   return (
     res
       .status(200)
-      .clearCookie("userAccessToken", localCookieOptions)
-      .clearCookie("userRefreshToken", localCookieOptions)
-      .clearCookie("connect.sid", localCookieOptions)
+      .clearCookie("userAccessToken", prodCookieOptions)
+      .clearCookie("userRefreshToken", prodCookieOptions)
+      .clearCookie("connect.sid", prodCookieOptions)
       .json(new ApiRes(200, {}, "User LoggedOut SuccessFully!"))
   );
 };
