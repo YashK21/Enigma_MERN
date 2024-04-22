@@ -93,7 +93,7 @@ function ProtectedUserRoute({ children }) {
     setIsLoading(false);
   }, []);
   if (isLoading) {
-    return <div>Loading...</div>; // Or any loading indicator
+    return <div>Loading...</div>;
   }
   if (!isAuth) {
     return <Navigate to="/noauth" />;
