@@ -99,33 +99,17 @@ const loginUser = async (req, res) => {
   const loggedInUser = await User.findById(existedUser._id).select(
     "-password -userRefreshToken"
   );
-
-  const localCookieOptions = {
-    httpOnly: false,
-    secure: false,
-  };
-
-  const prodCookieOptions = {
-    httpOnly: true, //false when in local env
-    secure: true,
-    sameSite: "none",
-  };
-  return res
-    .status(200)
-    .cookie("userAccessToken", userAccessToken, prodCookieOptions)
-    .cookie("userRefreshToken", userRefreshToken, prodCookieOptions)
-    .cookie("connect.sid",prodCookieOptions)
-    .json(
-      new ApiRes(
-        200,
-        {
-          user: loggedInUser,
-          userAccessToken,
-          userRefreshToken,
-        },
-        "User logged in successfully"
-      )
-    );
+  return res.status(200).json(
+    new ApiRes(
+      200,
+      {
+        user: loggedInUser,
+        userAccessToken,
+        userRefreshToken,
+      },
+      "User logged in successfully"
+    )
+  );
 };
 
 //logout
@@ -141,23 +125,9 @@ const logoutUser = async (req, res) => {
       new: true,
     }
   );
-  const localCookieOptions = {
-    httpOnly: false,
-    secure: false,
-  };
-  const prodCookieOptions = {
-    httpOnly: true, // true =when inn prod
-    secure: true,
-    sameSite: "none",
-  };
-  return (
-    res
-      .status(200)
-      .clearCookie("userAccessToken", prodCookieOptions)
-      .clearCookie("userRefreshToken", prodCookieOptions)
-      .clearCookie("connect.sid", prodCookieOptions)
-      .json(new ApiRes(200, {}, "User LoggedOut SuccessFully!"))
-  );
+  return res
+    .status(200)
+    .json(new ApiRes(200, {}, "User LoggedOut SuccessFully!"));
 };
 
 // retriving the lvl_img frm db
