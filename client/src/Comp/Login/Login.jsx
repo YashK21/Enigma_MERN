@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import Cookies from "js-cookie"
 const Login = () => {
   const localhost = import.meta.env.VITE_LOCALHOST;
   const prodUrl = import.meta.env.VITE_PROD;
@@ -28,8 +28,10 @@ const Login = () => {
     }
     res = await res.json();
     // console.log(typeof res);
-    console.log(res);
     let user = res.message.user.username;
+    // let userAccessToken = (res.message.userAccessToken);
+    
+    console.log(Cookies.get("userAccessToken"))
     localStorage.setItem("username", user);
     setMsg(`${user} ${res.data}`);
     setTimeout(() => {
