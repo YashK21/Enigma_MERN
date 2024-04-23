@@ -17,6 +17,7 @@ const Login = () => {
       headers: {
         "content-Type": "application/json",
       },
+      credentials: "include",
     });
     if (!res.ok) {
       res = await res.json();
