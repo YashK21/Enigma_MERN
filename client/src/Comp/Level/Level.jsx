@@ -13,7 +13,7 @@ const Level = () => {
   const userAccessToken = Cookies.get("userAccessToken");
   const handleLvlImg = async () => {
     try {
-      let res = await fetch(`${localhost}/api/v1/level/${lvl}`, {
+      let res = await fetch(`${prodUrl}/api/v1/level/${lvl}`, {
         headers: {
           "content-Type": "application/json",
           Authorization: `Bearer ${userAccessToken}`,
@@ -30,7 +30,7 @@ const Level = () => {
   };
   const handleLevelAnsCheck = async () => {
     try {
-      let res = await fetch(`${localhost}/api/v1/levelanscheck/${lvl}`, {
+      let res = await fetch(`${prodUrl}/api/v1/levelanscheck/${lvl}`, {
         method: "POST",
         body: JSON.stringify({ ans: lvlAns }),
         headers: {
@@ -60,7 +60,7 @@ const Level = () => {
 
   const handleCurrentLvl = async () => {
     try {
-      let res = await fetch(`${localhost}/api/v1/level/${lvl}`, {
+      let res = await fetch(`${prodUrl}/api/v1/level/${lvl}`, {
         headers: {
           "content-Type": "application/json",
           Authorization: `Bearer ${userAccessToken}`,
@@ -86,7 +86,7 @@ const Level = () => {
   const handleLogout = async () => {
     console.log("handle logout ");
     try {
-      await fetch(`${localhost}/api/v1/logout`, {
+      await fetch(`${prodUrl}/api/v1/logout`, {
         method: "POST",
           headers: {
             "content-Type": "application/json",
