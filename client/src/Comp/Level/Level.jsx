@@ -34,7 +34,7 @@ const Level = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${userAccessToken}`,
         },
-        withCredentials:true
+        withCredentials: true,
       })
       .then((res) => {
         const imgData = res.data.message;
@@ -108,30 +108,43 @@ const Level = () => {
   }, [lvl, navigate]); //Including navigate in the dependency array might seem unnecessary since it's unlikely to change during the component's lifecycle ,included to avoid potential bugs (eg-if conti re-renders due to any reason)
 
   const handleLogout = async () => {
+    // console.log("handle logout ");
+    // await axios
+    //   .post(`${prodUrl}/api/v1/logout`, {
+    //     headers: {
+    //       "content-Type": "application/json",
+    //       Authorization: `Bearer ${userAccessToken}`,
+    //     },
+    //     withCredentials: true,
+    //   })
+    //   .then((res) => {
+    //     console.log(res);
+    //     Cookies.remove("userAccessToken");
+    //     Cookies.remove("connect.sid");
+    //     localStorage.removeItem("username");
+    //     navigate("/login");
+    //   })
+    //   .catch((err) => {
+    //     console.log("Failed to logout", err);
+    //   });
     console.log("handle logout ");
-    await axios
-      .post(
-        `${prodUrl}/api/v1/logout`,
-        {
-          headers: {
-            "content-Type": "application/json",
-            Authorization: `Bearer ${userAccessToken}`,
-          },
-          withCredentials: true,
+  try {
+    await fetch(`${localhost}/api/v1/logout`, {
+      method: "POST",
+        headers: {
+          "content-Type": "application/json",
         },
-        
-      )
-      .then((res) => {
-        console.log(res);
-        Cookies.remove("userAccessToken");
-        Cookies.remove("connect.sid");
-        localStorage.removeItem("username");
-        navigate("/login");
-      })
-      .catch((err) => {
-        console.log("Failed to logout", err);
-      });
-  };
+        credentials: "include",
+    })
+    Cookies.remove("userAccessToken");
+    Cookies.remove("connect.sid");
+    localStorage.removeItem("username");
+    navigate("/login");
+  } catch (error) {
+console.log(error)
+  }
+  
+  }
   return (
     <div className="text-center">
       <h1 className="text-3xl font-semibold mb-4">Level {lvl}</h1>
