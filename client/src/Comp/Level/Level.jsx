@@ -117,10 +117,9 @@ const Level = () => {
             "content-Type": "application/json",
             Authorization: `Bearer ${userAccessToken}`,
           },
-        },
-        {
           withCredentials: true,
-        }
+        },
+        
       )
       .then((res) => {
         console.log(res);
