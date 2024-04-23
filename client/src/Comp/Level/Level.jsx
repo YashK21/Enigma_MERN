@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
 
 const Level = () => {
   const localhost = import.meta.env.VITE_LOCALHOST;
@@ -12,66 +13,89 @@ const Level = () => {
   let [lvl, setLvl] = useState(initialLvl);
   const userAccessToken = Cookies.get("userAccessToken");
   const handleLvlImg = async () => {
-    try {
-      let res = await fetch(`${prodUrl}/api/v1/level/${lvl}`, {
-        headers: {
-          "content-Type": "application/json",
-          Authorization: `Bearer ${userAccessToken}`,
-        },
-        credentials: "include",
-      });
-      res = await res.json();
-      const imgData = await res.message;
-      setLvlImg(imgData);
-      return lvl;
-    } catch (error) {
-      console.error("Failed to fetch level image:", error);
-    }
-  };
-  const handleLevelAnsCheck = async () => {
-    try {
-      let res = await fetch(`${prodUrl}/api/v1/levelanscheck/${lvl}`, {
-        method: "POST",
-        body: JSON.stringify({ ans: lvlAns }),
+    // try {
+    //   let res = await fetch(`${localhost}/api/v1/level/${lvl}`, {
+    //     headers: {
+    //       "content-Type": "application/json",
+    //       Authorization: `Bearer ${userAccessToken}`,
+    //     },
+    //     credentials: "include",
+    //   });
+    //   res = await res.json();
+    //   const imgData = await res.message;
+    //   setLvlImg(imgData);
+    //   return lvl;
+    // } catch (error) {
+    //   console.error("Failed to fetch level image:", error);
+    // }
+    await axios
+      .get(`${prodUrl}/api/v1/level/${lvl}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${userAccessToken}`,
         },
-        credentials: "include",
+        withCredentials:true
+      })
+      .then((res) => {
+        const imgData = res.data.message;
+        // console.log(imgData)
+        setLvlImg(imgData);
+        // console.log(lvl);
+        return lvl;
+      })
+      .catch((err) => {
+        console.error("Failed to fetch level image:", err);
       });
-      res = await res.json();
-      if (res.success) {
-        console.log("Correct Answer!", res.message);
-        // lvl = Number(lvl); lvl = lvl + 1; console.log(lvl);
-        setLvl((prevLvl) => {
-          const newLvl = Number(prevLvl) + 1;
-          Cookies.set("currentLvl", newLvl, { sameSite: "strict" });
-          return newLvl;
-        });
-        setLvlAns("");
-      } else {
-        console.log("Wrong Answer!", res.errorMessage);
-      }
-      // return lvl;
-    } catch (error) {
-      console.log(error);
-    }
+  };
+  const handleLevelAnsCheck = async () => {
+    await axios
+      .post(
+        `${prodUrl}/api/v1/levelanscheck/${lvl}`,
+        {
+          ans: lvlAns,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${userAccessToken}`,
+          },
+          withCredentials: true,
+        }
+      )
+      .then((res) => {
+        // console.log(res);
+        if (res.data.success) {
+          console.log("Correct Answer!", res.data.data);
+          setLvl((prevLvl) => {
+            const newLvl = Number(prevLvl) + 1;
+            Cookies.set("currentLvl", newLvl);
+            return newLvl;
+          });
+          setLvlAns("");
+        } else {
+          console.log("Wrong Answer!", res.data.errorMessage);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const handleCurrentLvl = async () => {
-    try {
-      let res = await fetch(`${prodUrl}/api/v1/level/${lvl}`, {
+    await axios
+      .get(`${prodUrl}/api/v1/level/${lvl}`, {
         headers: {
           "content-Type": "application/json",
           Authorization: `Bearer ${userAccessToken}`,
         },
-        credentials: "include",
+        withCredentials: true,
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
       });
-      res = await res.json();
-      // console.log(res)
-    } catch (error) {
-      console.log(error, "from current lvl");
-    }
   };
   useEffect(() => {
     const currentLvl = Cookies.get("currentLvl");
@@ -85,22 +109,29 @@ const Level = () => {
 
   const handleLogout = async () => {
     console.log("handle logout ");
-    try {
-      await fetch(`${prodUrl}/api/v1/logout`, {
-        method: "POST",
+    await axios
+      .post(
+        `${prodUrl}/api/v1/logout`,
+        {
           headers: {
             "content-Type": "application/json",
-            "Authorization": `Bearer ${userAccessToken}`
+            Authorization: `Bearer ${userAccessToken}`,
           },
-        credentials: "include",
+        },
+        {
+          withCredentials: true,
+        }
+      )
+      .then((res) => {
+        console.log(res);
+        Cookies.remove("userAccessToken");
+        Cookies.remove("connect.sid");
+        localStorage.removeItem("username");
+        navigate("/login");
+      })
+      .catch((err) => {
+        console.log("Failed to logout", err);
       });
-      Cookies.remove("userAccessToken");
-      Cookies.remove("connect.sid");
-      localStorage.removeItem("username");
-      navigate("/login");
-    } catch (error) {
-      console.error("Logout failed:", error);
-    }
   };
   return (
     <div className="text-center">
@@ -115,18 +146,18 @@ const Level = () => {
         className="mx-auto max-w-screen-lg max-h-screen-3/4"
       />
       <br />
-      <div class="flex items-center justify-center mt-4">
+      <div className="flex items-center justify-center mt-4">
         <input
           type="text"
           placeholder="Enter text here"
           value={lvlAns}
           onChange={(e) => setLvlAns(e.target.value)}
-          class="border-2 border-gray-300 m-3 rounded-md p-2 focus:outline-none focus:border-blue-500 shadow-sm"
+          className="border-2 border-gray-300 m-3 rounded-md p-2 focus:outline-none focus:border-blue-500 shadow-sm"
         />
         <button
           type="submit"
           onClick={handleLevelAnsCheck}
-          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         >
           Submit
         </button>
