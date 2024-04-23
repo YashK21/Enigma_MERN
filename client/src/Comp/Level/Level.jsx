@@ -129,7 +129,7 @@ const Level = () => {
     //   });
     console.log("handle logout ");
   try {
-    await fetch(`${localhost}/api/v1/logout`, {
+    await fetch(`${prodUrl}/api/v1/logout`, {
       method: "POST",
         headers: {
           "content-Type": "application/json",
