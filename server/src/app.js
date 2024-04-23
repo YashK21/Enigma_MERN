@@ -21,7 +21,7 @@ app.use(
   })
 );
 let sessionValue = {
-  secret: process.env.EXPRESS_SESSION_SECRET,
+  secret: "mysecret",
   resave: false,
   saveUninitialized: true,
   cookie: { httpOnly: false },

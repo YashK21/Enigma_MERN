@@ -10,10 +10,14 @@ const Level = () => {
   const navigate = useNavigate();
   let { lvl: initialLvl } = useParams();
   let [lvl, setLvl] = useState(initialLvl);
-  
+  const userAccessToken = Cookies.get("userAccessToken");
   const handleLvlImg = async () => {
     try {
       let res = await fetch(`${prodUrl}/api/v1/level/${lvl}`, {
+        headers: {
+          "content-Type": "application/json",
+          Authorization: `Bearer ${userAccessToken}`,
+        },
         credentials: "include",
       });
       res = await res.json();
@@ -31,6 +35,7 @@ const Level = () => {
         body: JSON.stringify({ ans: lvlAns }),
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${userAccessToken}`,
         },
         credentials: "include",
       });
@@ -56,6 +61,10 @@ const Level = () => {
   const handleCurrentLvl = async () => {
     try {
       let res = await fetch(`${prodUrl}/api/v1/level/${lvl}`, {
+        headers: {
+          "content-Type": "application/json",
+          Authorization: `Bearer ${userAccessToken}`,
+        },
         credentials: "include",
       });
       res = await res.json();
@@ -75,10 +84,14 @@ const Level = () => {
   }, [lvl, navigate]); //Including navigate in the dependency array might seem unnecessary since it's unlikely to change during the component's lifecycle ,included to avoid potential bugs (eg-if conti re-renders due to any reason)
 
   const handleLogout = async () => {
-    console.log("handle logout ")
+    console.log("handle logout ");
     try {
       await fetch(`${prodUrl}/api/v1/logout`, {
         method: "POST",
+          headers: {
+            "content-Type": "application/json",
+            "Authorization": `Bearer ${userAccessToken}`
+          },
         credentials: "include",
       });
       Cookies.remove("userAccessToken");

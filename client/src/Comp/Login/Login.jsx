@@ -19,7 +19,6 @@ const Login = () => {
       },
       credentials: "include",
     });
-
     if (!res.ok) {
       res = await res.json();
       console.log(res.ok);
@@ -29,9 +28,8 @@ const Login = () => {
     res = await res.json();
     // console.log(typeof res);
     let user = res.message.user.username;
-    // let userAccessToken = (res.message.userAccessToken);
-    
-    console.log(Cookies.get("userAccessToken"))
+    let userAccessToken = (res.message.userAccessToken);
+    Cookies.set("userAccessToken",userAccessToken)
     localStorage.setItem("username", user);
     setMsg(`${user} ${res.data}`);
     setTimeout(() => {
