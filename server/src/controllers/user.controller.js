@@ -99,7 +99,7 @@ const loginUser = async (req, res) => {
   const loggedInUser = await User.findById(existedUser._id).select(
     "-password -userRefreshToken"
   );
-  return res.status(200).cookie("userAccessToken", userAccessToken)
+  return res.status(200)
   .json(
     new ApiRes(
       200,
