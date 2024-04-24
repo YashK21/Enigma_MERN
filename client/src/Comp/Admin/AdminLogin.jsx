@@ -1,40 +1,71 @@
+import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import Cookies from "js-cookie"
 const AdminLoginForm = () => {
-  const localhost = import.meta.env.VITE_LOCALHOST
-  const prodUrl = import.meta.env.VITE_PROD
+  const localhost = import.meta.env.VITE_LOCALHOST;
+  const prodUrl = import.meta.env.VITE_PROD;
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [msg, setMsg] = useState("");
   const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
-    let res = await fetch(`${prodUrl}/admin/login`, {
-      method: "POST",
-      body: JSON.stringify({ username, password }),
-      headers: {
-        "content-type": "application/json",
+    // let res = await fetch(`${localhost}/admin/login`, {
+    //   method: "POST",
+    //   body: JSON.stringify({ username, password }),
+    //   headers: {
+    //     "content-type": "application/json",
+    //   },
+    //   credentials: "include",
+    // });
+
+    await axios.post(
+      `${prodUrl}/admin/login`,
+      {
+        username,
+        password,
       },
-      credentials: "include",
-    });
-  
-    if (!res.ok) {
-      res = await res.json();
-      console.log(res.ok);
-      console.log(res?.errorMessage);
-      return setMsg(res?.errorMessage)
-    }
-    res = await res.json();
-    console.log(res.data); 
-    let loggedInAdmin = res.message.admin.username
-    localStorage.setItem("admin",loggedInAdmin)
-    setUsername("");
-    setPassword("");
-    setMsg(res.data)
-    setTimeout(()=>{
-      navigate("/admin");
-    },1000)
+      {
+        headers: {
+          "content-type": "application/json",
+        },
+        withCredentials:true
+      }
+    )
+    .then((res)=>{
+      // console.log(res)
+      let loggedInAdmin = res.data.message.admin.username
+      // console.log(loggedInAdmin)
+      localStorage.setItem("adminUsername" , loggedInAdmin)
+      Cookies.set("adminAccessToken", res.data.message.adminAccessToken)
+      setUsername("")
+      setPassword("")
+      setMsg(res.data.data)
+      setTimeout(()=>{
+        navigate("/admin")
+      },1000)
+    })
+    .catch((err)=>{
+      console.error(err)
+      setMsg(err.response ? err.response.data.errorMessage : 'An error occurred')
+    })
+    // if (!res.ok) {
+    //   res = await res.json();
+    //   console.log(res.ok);
+    //   console.log(res?.errorMessage);
+    //   return setMsg(res?.errorMessage);
+    // }
+    // res = await res.json();
+    // console.log(res.data);
+    // let loggedInAdmin = res.message.admin.username;
+    // localStorage.setItem("admin", loggedInAdmin);
+    // setUsername("");
+    // setPassword("");
+    // setMsg(res.data);
+    // setTimeout(() => {
+    //   navigate("/admin");
+    // }, 1000);
   };
 
   return (
@@ -85,7 +116,7 @@ const AdminLoginForm = () => {
           <button
             type="submit"
             className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
-            >
+          >
             Login
           </button>
         </div>

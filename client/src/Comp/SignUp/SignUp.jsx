@@ -1,10 +1,11 @@
+import axios from "axios";
 import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
-  const localhost = import.meta.env.VITE_LOCALHOST
-  const produrl = import.meta.env.VITE_PROD
+  const localhost = import.meta.env.VITE_LOCALHOST;
+  const produrl = import.meta.env.VITE_PROD;
 
   const [username, setUserName] = useState();
   const [email, setEmail] = useState();
@@ -12,18 +13,34 @@ const SignUp = () => {
   const navigate = useNavigate();
   const handleSignUp = async (e) => {
     e.preventDefault();
-    let res = await fetch(`${produrl}/api/v1/register`, {
-      method: "POST",
-      body: JSON.stringify({ username, email, password }),
-      headers: {
-        "content-type": "application/json",
-      },
-    });
-    res = await res.json();
-    if (!res.success) alert("Something Went Wrong while registration");
-    else if (res.success) {
-      alert("SignUp Successfull");
-      navigate("/login");
+    try {
+      await axios
+        .post(
+          `${produrl}/api/v1/register`,
+          {
+            username,
+            email,
+            password,
+          },
+          {
+            headers: {
+              "content-type": "application/json",
+            },
+          }
+        )
+        .then(() => {
+          if (!res.dat.success)
+            alert("Something Went Wrong while registration");
+          else if (res.data.success) {
+            alert("SignUp Successfull");
+            navigate("/login");
+          }
+        })
+        .catch((err) => {
+          console.error("Something Went Wrong while registration", err);
+        });
+    } catch (err) {
+      console.error("Something Went Wrong while registration", err);
     }
   };
   const handleLoginAndSignUp = () => {

@@ -1,16 +1,17 @@
 import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import axios from "axios";
 
 const Admin = () => {
   const localhost = import.meta.env.VITE_LOCALHOST;
-  const prodUrl = import.meta.env.VITE_PROD
+  const prodUrl = import.meta.env.VITE_PROD;
   const [LvlNo, setLvlNo] = useState("");
   const [LvlImg, setLvlImg] = useState(null);
   const [LvlAns, setLvlAns] = useState("");
   const navigate = useNavigate();
   const formRef = useRef(null);
-
+  const adminAccessToken = Cookies.get("adminAccessToken");
   const handleSubmission = async (e) => {
     e.preventDefault();
     try {
@@ -18,41 +19,64 @@ const Admin = () => {
       formData.append("Lvl_No", LvlNo);
       formData.append("Lvl_Img", LvlImg);
       formData.append("Lvl_Ans", LvlAns);
-      let res = await fetch(`${prod}/admin`, {
-        method: "POST",
-        body: formData,
-        credentials: "include",
-      });
-      res = await res.json();
-      if (!res.success) alert("Something Went Wrong while Uploading");
-      else if (res) {
-        alert("Upload Successfull");
-        if (formRef.current) {
-          formRef.current.reset();
-        }
-        // Reset the state for each field
-        setLvlNo("");
-        setLvlImg(null);
-        setLvlAns("");
-      }
+      await axios
+        .post(`${prodUrl}/admin`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${adminAccessToken}`,
+          },
+          withCredentials: true,
+        })
+        .then((res) => {
+          if (!res.data.success) alert("Something Went Wrong while Uploading");
+          else if (res.data.success) {
+            alert("Upload Successfull");
+            if (formRef.current) {
+              formRef.current.reset();
+            }
+            setLvlNo("");
+            setLvlImg(null);
+            setLvlAns("");
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+      // let res = await fetch(`${localhost}/admin`, {
+      //   method: "POST",
+      //   body: formData,
+      //   credentials: "include",
+      // });
+      // res = await res.json();
+      // if (!res.success) alert("Something Went Wrong while Uploading");
+      // else if (res) {
+      //   alert("Upload Successfull");
+      //   if (formRef.current) {
+      //     formRef.current.reset();
+      //   }
+      //   // Reset the state for each field
+      //   setLvlNo("");
+      //   setLvlImg(null);
+      //   setLvlAns("");
+      // }
     } catch (error) {
       console.log(error);
     }
   };
   const handleLogout = async () => {
-    try {
-      await fetch(`${prodUrl}/admin/logout`, {
-        method: "POST",
-        credentials: "include",
+    await axios
+      .post(`${prodUrl}/admin/logout`, {
+        withCredentials: true,
+      })
+      .then(() => {
+        Cookies.remove("connect.sid");
+        Cookies.remove("adminAccessToken");
+        localStorage.removeItem("admin");
+        navigate("/admin/login");
+      })
+      .catch((err) => {
+        console.error("Logout failed:", error);
       });
-      Cookies.remove("connect.sid");
-      Cookies.remove("adminAccessToken");
-      localStorage.removeItem("admin");
-      navigate("/admin/login");
-    } catch (error) {
-      console.error("Logout failed:", error);
-      // Handle logout failure gracefully
-    }
   };
   return (
     <>
