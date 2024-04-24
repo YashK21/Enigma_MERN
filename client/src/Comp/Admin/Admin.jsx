@@ -20,7 +20,7 @@ const Admin = () => {
       formData.append("Lvl_Img", LvlImg);
       formData.append("Lvl_Ans", LvlAns);
       await axios
-        .post(`${prodUrl}/admin`, formData, {
+        .post(`${localhost}/admin`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${adminAccessToken}`,
@@ -65,9 +65,17 @@ const Admin = () => {
   };
   const handleLogout = async () => {
     await axios
-      .post(`${prodUrl}/admin/logout`, {
-        withCredentials: true,
-      })
+      .post(
+        `${localhost}/admin/logout`,
+        {},
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${adminAccessToken}`,
+          },
+          withCredentials: true,
+        }
+      )
       .then(() => {
         Cookies.remove("connect.sid");
         Cookies.remove("adminAccessToken");
