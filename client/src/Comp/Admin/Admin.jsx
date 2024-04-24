@@ -20,7 +20,7 @@ const Admin = () => {
       formData.append("Lvl_Img", LvlImg);
       formData.append("Lvl_Ans", LvlAns);
       await axios
-        .post(`${localhost}/admin`, formData, {
+        .post(`${prodUrl}/admin`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${adminAccessToken}`,
@@ -66,7 +66,7 @@ const Admin = () => {
   const handleLogout = async () => {
     await axios
       .post(
-        `${localhost}/admin/logout`,
+        `${prodUrl}/admin/logout`,
         {},
         {
           headers: {
