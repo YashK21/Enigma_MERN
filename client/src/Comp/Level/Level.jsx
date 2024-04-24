@@ -81,22 +81,6 @@ const Level = () => {
       });
   };
 
-  const handleCurrentLvl = async () => {
-    await axios
-      .get(`${prodUrl}/api/v1/level/${lvl}`, {
-        headers: {
-          "content-Type": "application/json",
-          Authorization: `Bearer ${userAccessToken}`,
-        },
-        withCredentials: true,
-      })
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
   useEffect(() => {
     const currentLvl = Cookies.get("currentLvl");
     if (currentLvl) {
@@ -104,7 +88,6 @@ const Level = () => {
     }
     handleLvlImg();
     navigate(`/level/${lvl}`); //bcz this makes the url changes from /1 to /2 when lvl changes without this the content only gets changed not the url
-    handleCurrentLvl();
   }, [lvl, navigate]); //Including navigate in the dependency array might seem unnecessary since it's unlikely to change during the component's lifecycle ,included to avoid potential bugs (eg-if conti re-renders due to any reason)
 
   const handleLogout = async () => {
