@@ -129,15 +129,13 @@ const Level = () => {
     <div className="text-center">
       <h1 className="text-3xl font-semibold mb-4">Level {lvl}</h1>
       <h2 className="text-lg mb-4">
-        Username:
-        {localStorage.getItem("username")}
-      </h2>{" "}
+        Username: {localStorage.getItem("username")}
+      </h2>
       <img
         src={`data:image/png;base64,${lvlImg}`}
         alt={`Level : ${lvl}`}
-        className="mx-auto max-w-screen-lg max-h-screen-3/4"
+        className="mx-auto max-w-full h-auto"
       />
-      <br />
       <div className="flex items-center justify-center mt-4">
         <input
           type="text"
@@ -153,10 +151,9 @@ const Level = () => {
         >
           Submit
         </button>
-        <br />
       </div>
       <button
-        className="block mx-auto bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+        className="block mx-auto bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4"
         onClick={handleLogout}
       >
         Logout
