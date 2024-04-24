@@ -75,7 +75,7 @@ const Admin = () => {
         navigate("/admin/login");
       })
       .catch((err) => {
-        console.error("Logout failed:", error);
+        console.error("Logout failed:", err);
       });
   };
   return (
