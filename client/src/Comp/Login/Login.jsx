@@ -22,7 +22,7 @@ const Login = () => {
     // });
     await axios
       .post(
-        `${localhost}/api/v1/login`,
+        `${prodUrl}/api/v1/login`,
         {
           username,
           password,
