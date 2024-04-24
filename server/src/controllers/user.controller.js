@@ -100,6 +100,7 @@ const loginUser = async (req, res) => {
     "-password -userRefreshToken"
   );
   return res.status(200)
+  // .cookie("userAccessToken",userAccessToken) - add when checking locally with postman - it behaves the same for auth like we have in client side
   .json(
     new ApiRes(
       200,

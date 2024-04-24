@@ -46,7 +46,7 @@ const adminLogin = async (req, res) => {
   // console.log(loggedInAdmin)
   return res
     .status(200)
-    .cookie("adminAccessToken", adminAccessToken)
+    // .cookie("adminAccessToken", adminAccessToken) add when checking locally with postman - it behaves the same for auth like we have in client side
     .json(
       new ApiRes(
         200,
