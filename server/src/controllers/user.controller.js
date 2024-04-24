@@ -22,7 +22,10 @@ const genAccessTokenandRefreshToken = async (userId) => {
     );
   }
 };
-
+const getNextLvlObjectId = async (currentLvlNo) => {
+  const nextLvl = await Lvl.findOne({ Lvl_No: currentLvlNo + 1 });
+  return nextLvl._id;
+}
 //reg
 const registerUser = async (req, res) => {
   const { username, email, password } = req.body;
@@ -100,7 +103,7 @@ const loginUser = async (req, res) => {
     "-password -userRefreshToken"
   );
   return res.status(200)
-  // .cookie("userAccessToken",userAccessToken) - add when checking locally with postman - it behaves the same for auth like we have in client side
+  .cookie("userAccessToken",userAccessToken) // add when checking locally with postman - it behaves the same for auth like we have in client side
   .json(
     new ApiRes(
       200,
@@ -169,7 +172,9 @@ const levelAnsCheck = async (req, res) => {
     if (!data) return res.status(200).json(new ApiError(200, "Wrong Answer!"));
     else {
       lvlNo = Number(lvlNo);
+      const nextLvlObjectId = await getNextLvlObjectId(lvlNo);
       lvlNo = lvlNo + 1;
+      await User.findByIdAndUpdate(req.user._id,{currentLvl:nextLvlObjectId})
       return res.status(200).json(new ApiRes(200, lvlNo, "Correct Answer"));
     }
   } catch (error) {
