@@ -23,7 +23,7 @@ const verifyJWT = async (req, res, next) => {
         .json(new ApiError(401, "Invalid User Access Token"));
     }
     req.user = currentUser;
-    console.log(req.user);
+    // console.log(req.user);
     next();
   } catch (error) {
     // throw new ApiError(401, error?.message || "Invalid User Access Token");

@@ -25,7 +25,7 @@ const genAccessTokenandRefreshToken = async (userId) => {
 const getNextLvlObjectId = async (currentLvlNo) => {
   const nextLvl = await Lvl.findOne({ Lvl_No: currentLvlNo + 1 });
   return nextLvl._id;
-}
+};
 //reg
 const registerUser = async (req, res) => {
   const { username, email, password } = req.body;
@@ -47,13 +47,13 @@ const registerUser = async (req, res) => {
 
   //currentLvl
   const currentLvl = await Lvl.findOne({ Lvl_No: "1" });
-
-  //create
+  const intialScore = await Lvl.findOne({ Lvl_InitialScore: "0" });
   const createdUser = await User.create({
     email,
     username: username.toLowerCase(),
     password,
     currentLvl: currentLvl._id,
+    userCurrentScore: intialScore.Lvl_InitialScore,
   });
 
   //check for saved
@@ -94,27 +94,39 @@ const loginUser = async (req, res) => {
 
   if (!username.currentLvl) {
     let currentLvl = await Lvl.findOne({ Lvl_No: "1" });
+    if (currentLvl == 1) {
+    }
     currentLvl = currentLvl._id;
   }
+
+  console.log("from 101", existedUser);
+  // if(!username.)
+  // let currentLvlScore = await Lvl.findOne({ Lvl_InitialScore: "0" });
+  // console.log(currentLvlScore.Lvl_InitialScore);
+  // currentLvlScore = currentLvlScore._id;
+  // console.log(currentLvlScore);
+
   const { userAccessToken, userRefreshToken } =
     await genAccessTokenandRefreshToken(existedUser._id);
 
   const loggedInUser = await User.findById(existedUser._id).select(
     "-password -userRefreshToken"
   );
-  return res.status(200)
-  .cookie("userAccessToken",userAccessToken) // add when checking locally with postman - it behaves the same for auth like we have in client side
-  .json(
-    new ApiRes(
-      200,
-      {
-        user: loggedInUser,
-        userAccessToken,
-        userRefreshToken,
-      },
-      "User logged in successfully"
-    )
-  );
+  return res
+    .status(200)
+    .cookie("userAccessToken", userAccessToken) // add when checking locally with postman - it behaves the same for auth like we have in client side
+    .json(
+      new ApiRes(
+        200,
+        {
+          user: loggedInUser,
+          userAccessToken,
+          userRefreshToken,
+          // currentLvlScore,
+        },
+        "User logged in successfully"
+      )
+    );
 };
 
 //logout
@@ -139,11 +151,8 @@ const logoutUser = async (req, res) => {
 const levelImg = async (req, res) => {
   let lvlNo = req.params.lvl;
   req.session.lvlNo = lvlNo;
-  console.log(req.session.lvlNo, "from session");
-  console.log(`Querying for "Level No": ${lvlNo}`);
   try {
     let lvlImg = await Lvl.findOne({ Lvl_No: lvlNo });
-    console.log(`Query result:`, lvlImg);
     lvlImg = lvlImg.Lvl_Img;
     if (!lvlImg) {
       return res
@@ -156,7 +165,7 @@ const levelImg = async (req, res) => {
     return res.status(500).json({
       statusCode: 500,
       data: null,
-      message: "Internal server error",
+      message: "Internal server error from lvlImg",
       success: false,
     });
   }
@@ -169,12 +178,30 @@ const levelAnsCheck = async (req, res) => {
   let lvlNo = req.params.lvl;
   try {
     let data = await Lvl.findOne({ Lvl_Ans: ans.toLowerCase() });
+    let Lvl_Score = data.Lvl_Score; //getting the score of lvl given by admin
     if (!data) return res.status(200).json(new ApiError(200, "Wrong Answer!"));
     else {
       lvlNo = Number(lvlNo);
       const nextLvlObjectId = await getNextLvlObjectId(lvlNo);
       lvlNo = lvlNo + 1;
-      await User.findByIdAndUpdate(req.user._id,{currentLvl:nextLvlObjectId})
+      let user = await User.findOne(req.user._id);
+      let userCurrentLvl = user.currentLvl;
+      if (userCurrentLvl.toString() !== nextLvlObjectId.toString()) {
+        // If the user has moved to a new level, update their score
+        let userCurrentScore = user.userCurrentScore;
+        if (Lvl_Score > userCurrentScore) {
+          let currentScore = user.userCurrentScore;
+          let score = data.Lvl_Score;
+          currentScore = currentScore + score;
+          await User.findByIdAndUpdate(req.user._id, {
+            userCurrentScore: currentScore,
+          });
+        }
+        // Update the user's current level to the next level
+        await User.findByIdAndUpdate(req.user._id, {
+          currentLvl: nextLvlObjectId,
+        });
+      }
       return res.status(200).json(new ApiRes(200, lvlNo, "Correct Answer"));
     }
   } catch (error) {
@@ -221,6 +248,20 @@ const currentLvl = async (req, res) => {
       .json(new ApiError(404, "User not found or no current level set"));
   }
 };
+
+const addScoreOfUser = async (req, res) => {
+  let lvlNo = req.params.lvl;
+  try {
+    const user = await User.findById(req.user._id);
+    console.log(user.userCurrentScore);
+    res.send(lvlNo);
+    // const currentLvl = await Lvl.findOne({ Lvl_No: lvlNo });
+    // const currentLvlScore = currentLvl.Lvl_Score;
+    // res.send(currentLvlScore);
+  } catch (error) {
+    res.send(error);
+  }
+};
 export {
   registerUser,
   loginUser,
@@ -228,4 +269,5 @@ export {
   levelImg,
   levelAnsCheck,
   currentLvl,
+  addScoreOfUser,
 };
