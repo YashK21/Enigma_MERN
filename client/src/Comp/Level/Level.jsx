@@ -30,7 +30,7 @@ const Level = () => {
     //   console.error("Failed to fetch level image:", error);
     // }
     await axios
-      .get(`${localhost}/api/v1/level/${lvl}`, {
+      .get(`${prodUrl}/api/v1/level/${lvl}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${userAccessToken}`,
@@ -51,7 +51,7 @@ const Level = () => {
   const handleLevelAnsCheck = async () => {
     await axios
       .post(
-        `${localhost}/api/v1/levelanscheck/${lvl}`,
+        `${prodUrl}/api/v1/levelanscheck/${lvl}`,
         {
           ans: lvlAns,
         },
@@ -94,7 +94,7 @@ const Level = () => {
   const handleLogout = async () => {
     console.log("handle logout ");
     try {
-      await fetch(`${localhost}/api/v1/logout`, {
+      await fetch(`${prodUrl}/api/v1/logout`, {
         method: "POST",
         headers: {
           "content-Type": "application/json",
