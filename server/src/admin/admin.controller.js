@@ -44,19 +44,22 @@ const adminLogin = async (req, res) => {
     "-password -adminAccessToken"
   );
   // console.log(loggedInAdmin)
-  return res
-    .status(200)
-    // .cookie("adminAccessToken", adminAccessToken) add when checking locally with postman - it behaves the same for auth like we have in client side
-    .json(
-      new ApiRes(
-        200,
-        {
-          admin: loggedInAdmin,
-          adminAccessToken,
-        },
-        "Admin logged in successfully"
+  return (
+    res
+      .status(200)
+      .cookie("adminAccessToken", adminAccessToken)
+      // add when checking locally with postman - it behaves the same for auth like we have in client side
+      .json(
+        new ApiRes(
+          200,
+          {
+            admin: loggedInAdmin,
+            adminAccessToken,
+          },
+          "Admin logged in successfully"
+        )
       )
-    );
+  );
 };
 const adminLogout = async (req, res) => {
   await Admin.findByIdAndUpdate(

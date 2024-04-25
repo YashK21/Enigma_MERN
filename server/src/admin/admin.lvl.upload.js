@@ -5,7 +5,7 @@ import ApiError from "../utils/ApiRes.js";
 const adminUpload = async (req, res) => {
 
   //for uploading Lvls
-  let { Lvl_No ,Lvl_Ans } = req.body;
+  let { Lvl_No ,Lvl_Ans , Lvl_InitialScore ,Lvl_Score } = req.body;
   const file = req.files.Lvl_Img;
   // console.log(file);
   if (!file) {
@@ -20,7 +20,7 @@ const adminUpload = async (req, res) => {
     return res.status(400).json(new ApiError(400, "All Fields are required"));
   }
   const lvlExisted = await Lvl.findOne({
-    $or: [{ Lvl_No }, { base64Img }, { Lvl_Ans }],
+    $or: [{ Lvl_No }, { base64Img }, { Lvl_Ans } ,{Lvl_Score}],
   });
   if (lvlExisted) {
     return res.status(400).json(new ApiError(400, "Level Already Exists"));
@@ -28,7 +28,9 @@ const adminUpload = async (req, res) => {
   const levelCreated = await Lvl.create({
     Lvl_No,
     Lvl_Img: base64Img,
-    Lvl_Ans 
+    Lvl_Ans ,
+    Lvl_InitialScore,
+    Lvl_Score
   });
 
   const levelSaved = await Lvl.findOne(levelCreated._id).select("-Lvl_Ans");
