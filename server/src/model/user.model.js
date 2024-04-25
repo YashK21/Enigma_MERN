@@ -26,6 +26,13 @@ const userSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Lvl",
   },
+  intialScore: {
+    type:mongoose.Schema.Types.ObjectId,
+    ref:"Lvl"
+  },
+  userCurrentScore:{
+    type:Number,
+  },
   userRefreshToken: {
     type: String,
   },
