@@ -9,6 +9,7 @@ const Admin = () => {
   const [LvlNo, setLvlNo] = useState("");
   const [LvlImg, setLvlImg] = useState(null);
   const [LvlAns, setLvlAns] = useState("");
+  const [LvlScore,setLvlScore] = useState("")
   const navigate = useNavigate();
   const formRef = useRef(null);
   const adminAccessToken = Cookies.get("adminAccessToken");
@@ -19,8 +20,9 @@ const Admin = () => {
       formData.append("Lvl_No", LvlNo);
       formData.append("Lvl_Img", LvlImg);
       formData.append("Lvl_Ans", LvlAns);
+      formData.append("Lvl_Score",LvlScore)
       await axios
-        .post(`${prodUrl}/admin`, formData, {
+        .post(`${localhost}/admin`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${adminAccessToken}`,
@@ -37,6 +39,7 @@ const Admin = () => {
             setLvlNo("");
             setLvlImg(null);
             setLvlAns("");
+            setLvlScore("")
           }
         })
         .catch((err) => {
@@ -133,6 +136,23 @@ const Admin = () => {
             onChange={(e) => setLvlAns(e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
             placeholder="Enter level answer"
+          />
+        </div>
+        <div className="mt-4">
+          <label
+            htmlFor="lvlAns"
+            className="block mb-2 font-medium text-gray-700"
+          >
+            Level Score
+          </label>
+          <input
+            type="text"
+            id="LvlScore"
+            name="LvlScore"
+            value={LvlScore}
+            onChange={(e) => setLvlScore(e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+            placeholder="Enter level score"
           />
         </div>
         <div className="mt-6">
