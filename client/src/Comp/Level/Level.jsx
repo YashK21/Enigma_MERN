@@ -3,7 +3,6 @@ import Cookies from "js-cookie";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import lvl_Bg from "../img/lvl_Bg.jpg";
-import lvl_B2 from "../img/lvl_B2.jpg";
 import NavBar from "../NavBar/NavBar";
 const Level = () => {
   const localhost = import.meta.env.VITE_LOCALHOST;
