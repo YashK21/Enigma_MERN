@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-
+import lvl_Bg from "../img/lvl_Bg.jpg";
+import lvl_B2 from "../img/lvl_B2.jpg";
 const Level = () => {
   const localhost = import.meta.env.VITE_LOCALHOST;
   const prodUrl = import.meta.env.VITE_PROD;
@@ -29,7 +30,7 @@ const Level = () => {
     //   console.error("Failed to fetch level image:", error);
     // }
     await axios
-      .get(`${prodUrl}/api/v1/level/${lvl}`, {
+      .get(`${localhost}/api/v1/level/${lvl}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${userAccessToken}`,
@@ -50,7 +51,7 @@ const Level = () => {
   const handleLevelAnsCheck = async () => {
     await axios
       .post(
-        `${prodUrl}/api/v1/levelanscheck/${lvl}`,
+        `${localhost}/api/v1/levelanscheck/${lvl}`,
         {
           ans: lvlAns,
         },
@@ -93,7 +94,7 @@ const Level = () => {
   const handleLogout = async () => {
     console.log("handle logout ");
     try {
-      await fetch(`${prodUrl}/api/v1/logout`, {
+      await fetch(`${localhost}/api/v1/logout`, {
         method: "POST",
         headers: {
           "content-Type": "application/json",
@@ -109,16 +110,43 @@ const Level = () => {
     }
   };
   return (
-    <div className="text-center">
-      <h1 className="text-3xl font-semibold mb-4">Level {lvl}</h1>
-      <h2 className="text-lg mb-4">
+    <div
+      className="text-center"
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "100vh",
+        overflow: "hidden",
+        backgroundImage: `url(${lvl_Bg})`,
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        fontFamily: "Source Code Pro",
+        fontWeight: 600,
+        fontOpticalSizing: "auto",
+        fontStyle: "normal",
+      }}
+    >
+      <h1 className="text-3xl  font-semibold mt-7 text-white">Level {lvl}</h1>
+      <h2 className="text-2xl mb-4 text-white">
         Username: {localStorage.getItem("username")}
       </h2>
-      <img
-        src={`data:image/png;base64,${lvlImg}`}
-        alt={`Level : ${lvl}`}
-        className="mx-auto max-w-full h-auto"
-      />
+      <div
+        style={{
+          maxHeight: "80vh",
+          overflow: "hidden",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        <img
+          src={`data:image/png;base64,${lvlImg}`}
+          alt={`Level : ${lvl}`}
+          style={{ maxWidth: "100%", height: "auto", objectFit: "contain" }}
+        />
+      </div>
       <div className="flex items-center justify-center mt-4">
         <input
           type="text"
@@ -136,7 +164,7 @@ const Level = () => {
         </button>
       </div>
       <button
-        className="block mx-auto bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4"
+        className="block mx-auto bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mb-2"
         onClick={handleLogout}
       >
         Logout
