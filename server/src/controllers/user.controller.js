@@ -189,7 +189,7 @@ const levelAnsCheck = async (req, res) => {
       if (userCurrentLvl.toString() !== nextLvlObjectId.toString()) {
         // If the user has moved to a new level, update their score
         let userCurrentScore = user.userCurrentScore;
-        if (Lvl_Score >= userCurrentScore) {
+        if (Lvl_Score !== userCurrentScore) {
           let currentScore = user.userCurrentScore;
           let score = data.Lvl_Score;
           currentScore = currentScore + score;
