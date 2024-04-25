@@ -10,6 +10,8 @@ import NoAuth from "../NoAuth/NoAuth.jsx";
 import Cookies from "js-cookie";
 import Admin from "../Admin/Admin.jsx";
 import AdminLoginForm from "../Admin/AdminLogin.jsx";
+import Contact from "../Contact/Contact.jsx";
+import Leaderboard from "../Leaderboard/Leaderboard.jsx";
 const Routes = createBrowserRouter([
   {
     path: "/",
@@ -58,6 +60,14 @@ const Routes = createBrowserRouter([
       {
         path: "noauth",
         element: <NoAuth />,
+      },
+      {
+        path: "contact",
+        element: <Contact />,
+      },
+      {
+        path: "leaderboard",
+        element: <Leaderboard />,
       },
     ],
   },

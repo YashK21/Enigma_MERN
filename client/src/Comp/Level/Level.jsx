@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import lvl_Bg from "../img/lvl_Bg.jpg";
 import lvl_B2 from "../img/lvl_B2.jpg";
+import NavBar from "../NavBar/NavBar";
 const Level = () => {
   const localhost = import.meta.env.VITE_LOCALHOST;
   const prodUrl = import.meta.env.VITE_PROD;
@@ -110,66 +111,61 @@ const Level = () => {
     }
   };
   return (
-    <div
-      className="text-center"
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100vh",
-        overflow: "hidden",
-        backgroundImage: `url(${lvl_Bg})`,
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        fontFamily: "Source Code Pro",
-        fontWeight: 600,
-        fontOpticalSizing: "auto",
-        fontStyle: "normal",
-      }}
-    >
-      <h1 className="text-3xl  font-semibold mt-7 text-white">Level {lvl}</h1>
-      <h2 className="text-2xl mb-4 text-white">
-        Username: {localStorage.getItem("username")}
-      </h2>
-      <div
-        style={{
-          maxHeight: "80vh",
-          overflow: "hidden",
-          display: "flex",
-          justifyContent: "center",
-        }}
-      >
+    <>
+  <NavBar />
+  <div
+    className="h-screen overflow-y-auto flex flex-col items-center justify-center"
+    style={{
+      backgroundImage: `url(${lvl_Bg})`,
+      backgroundRepeat: "no-repeat",
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      fontFamily: "Source Code Pro",
+      fontWeight: 600,
+      fontOpticalSizing: "auto",
+      fontStyle: "normal",
+    }}
+  >
+    <h1 className="text-2xl font-semibold mt-9 mb-2 text-white">
+      Level {lvl}
+    </h1>
+    <h2 className="text-lg mb-2 text-white">
+      Username: {localStorage.getItem("username")}
+    </h2>
+    <div className="max-h-60vh overflow-hidden flex items-center justify-center">
+      <div className="aspect-w-7 aspect-h-5 w-full flex items-center justify-center">
         <img
           src={`data:image/png;base64,${lvlImg}`}
           alt={`Level : ${lvl}`}
-          style={{ maxWidth: "100%", height: "auto", objectFit: "contain" }}
+          className="object-contain w-6/12 mx-auto"
         />
       </div>
-      <div className="flex items-center justify-center mt-4">
-        <input
-          type="text"
-          placeholder="Enter text here"
-          value={lvlAns}
-          onChange={(e) => setLvlAns(e.target.value)}
-          className="border-2 border-gray-300 m-3 rounded-md p-2 focus:outline-none focus:border-blue-500 shadow-sm"
-        />
-        <button
-          type="submit"
-          onClick={handleLevelAnsCheck}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        >
-          Submit
-        </button>
-      </div>
+    </div>
+
+    <div className="flex items-center justify-center mt-2">
+      <input
+        type="text"
+        placeholder="Enter text here"
+        value={lvlAns}
+        onChange={(e) => setLvlAns(e.target.value)}
+        className="border-2 border-gray-300 m-2 rounded-md p-2 focus:outline-none focus:border-blue-500 shadow-sm"
+      />
       <button
-        className="block mx-auto bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mb-2"
-        onClick={handleLogout}
+        type="submit"
+        onClick={handleLevelAnsCheck}
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
       >
-        Logout
+        Submit
       </button>
     </div>
+    <button
+      className="block mx-auto bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mb-2"
+      onClick={handleLogout}
+    >
+      Logout
+    </button>
+  </div>
+</>
   );
 };
 
