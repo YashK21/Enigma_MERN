@@ -1,11 +1,11 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
-
 const IntroRules = () => {
   const navigate = useNavigate();
-const handleEnterGame = () => {
-  navigate("/level/1")
-}
+  const path = localStorage.getItem("currentPath");
+
+  const handleEnterGame = () => {
+    path =="/" || path =="/rules" ?  navigate("/level/1") :navigate(path) 
+  };
   return (
     <div className="flex flex-col items-center justify-center h-screen">
       <button

@@ -1,14 +1,13 @@
-import React from "react";
 import { Link } from "react-router-dom";
-
 const NavBar = () => {
+  // const excludedPaths = ["/"];
   return (
     <nav className="bg-gray-800 p-4 fixed top-0 left-0 w-full">
-      <div className="mx-auto flex justify-between items-center">
+      <div className="flex justify-between items-center">
         <div className="text-white font-bold">Enigma</div>
-        <div className="ml-4 flex space-x-6">
-          <Link to="/" className="text-white hover:text-gray-300">
-            Home
+        <div className="flex gap-3 lg:gap-7">
+          <Link to="/rules" className="text-white hover:text-gray-300">
+           Rules
           </Link>
           <Link to="/rules" className="text-white hover:text-gray-300">
             About

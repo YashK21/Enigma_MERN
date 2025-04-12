@@ -10,18 +10,10 @@ const AdminLoginForm = () => {
   const [msg, setMsg] = useState("");
   const navigate = useNavigate();
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    // let res = await fetch(`${localhost}/admin/login`, {
-    //   method: "POST",
-    //   body: JSON.stringify({ username, password }),
-    //   headers: {
-    //     "content-type": "application/json",
-    //   },
-    //   credentials: "include",
-    // });
+    e.preventDefault()
 
     await axios.post(
-      `${prodUrl}/admin/login`,
+      `${localhost}/admin/login`,
       {
         username,
         password,

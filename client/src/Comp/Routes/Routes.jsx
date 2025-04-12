@@ -1,17 +1,18 @@
-import React from "react";
 import { Navigate, createBrowserRouter } from "react-router-dom";
-import Layout from "../Layout/Layout.jsx";
-import Welcome from "../Welcome/Welcome.jsx";
-import SignUp from "../SignUp/SignUp.jsx";
-import Login from "../Login/Login.jsx";
-import Level from "../Level/Level.jsx";
-import IntroRules from "../IntroRules/IntroRules.jsx";
-import NoAuth from "../NoAuth/NoAuth.jsx";
 import Cookies from "js-cookie";
-import Admin from "../Admin/Admin.jsx";
-import AdminLoginForm from "../Admin/AdminLogin.jsx";
-import Contact from "../Contact/Contact.jsx";
-import Leaderboard from "../Leaderboard/Leaderboard.jsx";
+import {
+  Layout,
+  Welcome,
+  SignUp,
+  Login,
+  Leaderboard,
+  Level,
+  IntroRules,
+  NoAuth,
+  Admin,
+  AdminLoginForm,
+  Contact,
+} from "../index.js";
 const Routes = createBrowserRouter([
   {
     path: "/",
@@ -72,30 +73,10 @@ const Routes = createBrowserRouter([
     ],
   },
 ]);
-// const routes = createBrowserRouter(
-//     createRoutesFromElements(
-//     <Route path="/" element={<Layout />}>
-// <Route path="" element={<Welcome />} />
-// <Route path="login" element={<Login />} />
-// <Route path="signup" element={<SignUp />} />
-// <Route element={<ProtectedRoute/>}>
-//   <Route
-//     path="rules"
-//     element={<IntroRules />}
-//   />
-// </Route>
-// <Route
-//   path="level/:lvl"
-//   element={ <Level /> }
-// />
-// </Route>
-// )
-// );
 function ProtectedUserRoute({ children }) {
-const userAccessToken = Cookies.get("userAccessToken")
-const isAuth = !!userAccessToken
-if(isAuth) return <>{children}</>
-return <Navigate to="/noauth"/>
+  const userAccessToken = Cookies.get("userAccessToken");
+  if (userAccessToken) return children;
+  return <Navigate to="/noauth" />;
 }
 
 function ProtectedAdminRoute({ children }) {

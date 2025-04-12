@@ -45,23 +45,6 @@ const Admin = () => {
         .catch((err) => {
           console.error(err);
         });
-      // let res = await fetch(`${localhost}/admin`, {
-      //   method: "POST",
-      //   body: formData,
-      //   credentials: "include",
-      // });
-      // res = await res.json();
-      // if (!res.success) alert("Something Went Wrong while Uploading");
-      // else if (res) {
-      //   alert("Upload Successfull");
-      //   if (formRef.current) {
-      //     formRef.current.reset();
-      //   }
-      //   // Reset the state for each field
-      //   setLvlNo("");
-      //   setLvlImg(null);
-      //   setLvlAns("");
-      // }
     } catch (error) {
       console.log(error);
     }
@@ -69,7 +52,7 @@ const Admin = () => {
   const handleLogout = async () => {
     await axios
       .post(
-        `${prodUrl}/admin/logout`,
+        `${localhost}/admin/logout`,
         {},
         {
           headers: {
