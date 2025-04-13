@@ -1,56 +1,31 @@
-import { useCallback, useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import Cookies from "js-cookie";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation,useOutletContext } from "react-router-dom";
 import axios from "axios";
 import lvl_Bg from "../img/lvl_Bg.jpg";
-const Level = () => {
+const Level = (  ) => {
+  const userContext = useOutletContext()
+  
   const localhost = import.meta.env.VITE_LOCALHOST;
   // const prodUrl = import.meta.env.VITE_PROD;
-  const [currentLvlDetails, setCurrentLvlDetails] = useState({
-    Lvl_No: "",
-    Lvl_Img: "",
-    Lvl_Score: "",
-  });
   const [userInputAnswer, setUserInputAnswer] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const location = useLocation();
   const navigate = useNavigate();
+
   const userAccessToken = Cookies.get("userAccessToken");
   const username = localStorage.getItem("username");
-  const handleUserDetails = useCallback(async () => {
-    try {
-      const res = await axios.post(
-        `${localhost}/current-user`,
-        {
-          username,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${userAccessToken}`,
-          },
-          withCredentials: true,
-        }
-      );
-      const { Lvl_No, Lvl_Img, Lvl_Score } = res.data.data;
-      setCurrentLvlDetails({
-        Lvl_No,
-        Lvl_Img,
-        Lvl_Score,
-      });
-    } catch (error) {
-      console.log(error?.response?.data?.errorMessage);
-    }
-  }, [username, localhost, userAccessToken]);
   const handleLevelAnsCheck = async () => {
     if (isLoading) return;
     setIsLoading(true);
     try {
       const res = await axios.post(
-        `${localhost}/levelanscheck/${currentLvlDetails?.Lvl_No}`,
+        `${localhost}/levelanscheck/${userContext?.Lvl_No}`,
         {
           username,
           userInputAnswer,
-          currentLvl: currentLvlDetails?.Lvl_No,
+          currentLvl: userContext?.Lvl_No,
         },
         {
           headers: {
@@ -60,30 +35,41 @@ const Level = () => {
           withCredentials: true,
         }
       );
-      console.log(res?.data?.data);
+      console.log(res?.data);
     } catch (error) {
-      console.log(error?.response?.data?.errorMessage);
+      console.log(error?.response);
     } finally {
-      setTimeout(() => setIsLoading(false), 500);    }
+      setTimeout(() => setIsLoading(false), 500);
+    }
   };
+
   useEffect(() => {
-    handleUserDetails();
-  }, [handleUserDetails]);
+    const excludedPaths = ["/", "/login", "/signup"];
+    const isExcluded = excludedPaths.includes(location.pathname);
+    if (isExcluded) return;
+  }, [ location.pathname]);
 
   const handleLogout = async () => {
     console.log("handle logout ");
     try {
-      await fetch(`${localhost}/logout`, {
-        method: "POST",
-        headers: {
-          "content-Type": "application/json",
+      const res = await axios.post(
+        `${localhost}/logout`,
+        {
+          username,
         },
-        credentials: "include",
-      });
-      Cookies.remove("userAccessToken");
-      Cookies.remove("connect.sid");
-      localStorage.clear();
-      navigate("/login");
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${userAccessToken}`,
+          },
+          withCredentials: true,
+        }
+      );
+      if (res?.data?.statusCode == 200) {
+        localStorage.clear();
+        Cookies.remove();
+        navigate(`/login`);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -104,8 +90,8 @@ const Level = () => {
         }}
       >
         <h1 className="text-2xl  font-extrabold lg:mt-16 mb-3 text-white drop-shadow-md">
-          Level {currentLvlDetails.Lvl_No} - Points{" "}
-          {currentLvlDetails.Lvl_Score}
+          Level {userContext.Lvl_No} - Points{" "}
+          {userContext.Lvl_Score}
         </h1>
         <h2 className="text-xl mb-4 text-white opacity-80 tracking-wide">
           Username:{" "}
@@ -115,8 +101,8 @@ const Level = () => {
         <div className="max-h-40vh overflow-hidden flex items-center justify-center mb-6">
           <div className="aspect-w-7 aspect-h-5 w-full lg:w-12/12 flex items-center justify-center">
             <img
-              src={`data:image/png;base64,${currentLvlDetails?.Lvl_Img}`}
-              alt={`Level : ${currentLvlDetails?.Lvl_No}`}
+              src={`data:image/png;base64,${userContext?.Lvl_Img}`}
+              alt={`Level : ${userContext?.Lvl_No}`}
               className="object-contain w-8/12 lg:w-6/12 mx-auto rounded-xl border-4 border-gray-900 shadow-lg"
             />
           </div>

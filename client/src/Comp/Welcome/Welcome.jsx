@@ -9,33 +9,39 @@ const Welcome = () => {
   };
   return (
     <div
-      className="flex flex-col items-center justify-center h-screen text-white gap-3"
+      className="flex flex-col items-center justify-center h-screen text-white gap-6 relative overflow-hidden"
       style={{
         backgroundImage: `url(${bg})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
     >
-      <h1 className="text-3xl text-center font-bold mb-8 text-blue-300">
-        Welcome to the land of mystery!
+      {/* Subtle mist effect */}
+      <div className="absolute inset-0 bg-black bg-opacity-30 backdrop-blur-sm z-0" />
+
+      {/* Mysterious Glow Animation */}
+      <div className="absolute w-[300px] h-[300px] bg-purple-600 opacity-20 rounded-full blur-3xl animate-pulse z-0" />
+
+      <h1 className="text-3xl md:text-5xl text-center font-extrabold mb-10 text-purple-300 z-10 tracking-widest drop-shadow-md animate-fade-in">
+        Enter the Land of Mystery
       </h1>
 
       <button
         id="signup"
         onClick={handleLoginAndSignUp}
         type="button"
-        className="bg-gray-800 hover:bg-gray-700 cursor-pointer text-purple-400 font-semibold py-3 px-8 rounded-full focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 transition duration-300 shadow-lg"
+        className="z-10 bg-black/40 border border-purple-400 hover:bg-purple-900/20 text-purple-300 hover:text-white font-semibold py-3 px-10 rounded-full focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-60 transition-all duration-500 shadow-md tracking-wide hover:scale-105 animate-fade-in"
       >
-        Signup
+        ✦ Begin the Journey
       </button>
 
       <button
         id="login"
         onClick={handleLoginAndSignUp}
         type="button"
-        className="bg-gray-800 hover:bg-gray-700 cursor-pointer text-purple-400 font-semibold py-3 px-8 rounded-full focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 transition duration-300 shadow-lg"
+        className="z-10 bg-black/40 border border-purple-400 hover:bg-purple-900/20 text-purple-300 hover:text-white font-semibold py-3 px-10 rounded-full focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-60 transition-all duration-500 shadow-md tracking-wide hover:scale-105 animate-fade-in delay-150"
       >
-        Login
+        ✦ Unlock Secrets
       </button>
     </div>
   );

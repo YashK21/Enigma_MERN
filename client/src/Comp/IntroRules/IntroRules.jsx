@@ -1,11 +1,13 @@
 import { useNavigate } from "react-router-dom";
 const IntroRules = () => {
   const navigate = useNavigate();
-  const path = localStorage.getItem("currentPath");
+  const currentPath = localStorage.getItem("currentPath");
 
-  const handleEnterGame = () => {
-    path == "/" || path == "/rules" ? navigate("/level/1") : navigate(path);
+  const handleEnterGame = (currentPath) => {
+    if (!currentPath) navigate("/level/1");
+    else navigate(`/level/${currentPath}`);
   };
+
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-gray-900 to-black text-gray-100 px-6">
       <h1 className="text-4xl sm:text-5xl font-extrabold mb-8 tracking-wide text-center text-purple-400 drop-shadow-lg">
@@ -61,7 +63,7 @@ const IntroRules = () => {
       </div>
 
       <button
-        onClick={handleEnterGame}
+        onClick={() => handleEnterGame(currentPath)}
         className="mt-10 px-8 py-3 bg-purple-600 hover:bg-purple-700 text-white text-lg font-bold rounded-xl shadow-xl transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none"
       >
         🌀 Enter the Game
