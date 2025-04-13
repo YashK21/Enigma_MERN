@@ -64,73 +64,112 @@ const SignUp = () => {
     navigate("/login");
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     setStatus({
-      type:"",
-      msg:""
-    })
-  },[username,email,password])
+      type: "",
+      msg: "",
+    });
+  }, [username, email, password]);
   return (
-    <div className="flex justify-center items-center h-screen">
-      <form className="w-full max-w-md px-6 py-10 bg-white rounded-lg shadow-md">
-        <h3 className="mb-6 text-4xl font-extrabold text-gray-900 text-center">
-          SignUp
+    <div className="flex justify-center items-center h-screen bg-gradient-to-br from-gray-950 via-black to-gray-900 text-white">
+      <form
+        className="w-full max-w-md px-8 py-10 bg-[#0f0f11]/80 backdrop-blur-md border border-purple-700 rounded-xl shadow-[0_0_20px_2px_rgba(128,0,255,0.2)]"
+        onSubmit={handleSignUp}
+      >
+        <h3 className="mb-8 text-4xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-500 tracking-wider animate-pulse">
+          Initiate Protocol
         </h3>
-        <label htmlFor="username" className="text-sm text-gray-900">
-          Username
-        </label>
-        <input
-          id="username"
-          type="text"
-          value={username}
-          onChange={(e) => setUserName(e.target.value)}
-          placeholder="Enter username"
-          className="w-full px-4 py-3 mb-5 mt-2 text-sm font-medium text-gray-900 bg-gray-200 rounded-lg focus:outline-none focus:bg-gray-300"
-        />
-        <label htmlFor="email" className="text-sm text-gray-900">
-          Email
-        </label>
-        <input
-          id="email"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Enter email"
-          className="w-full px-4 py-3 mb-5 mt-2 text-sm font-medium text-gray-900 bg-gray-200 rounded-lg focus:outline-none focus:bg-gray-300"
-        />
-        <label htmlFor="password" className="text-sm text-gray-900">
-          Password
-        </label>
-        <input
-          id="password"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Enter password"
-          className="w-full px-4 py-3 mb-6 mt-2 text-sm font-medium text-gray-900 bg-gray-200 rounded-lg focus:outline-none focus:bg-gray-300"
-        />
+
+        <div className="flex flex-col space-y-5">
+          <div>
+            <label
+              htmlFor="username"
+              className="block text-sm text-gray-300 text-center"
+            >
+              Codename
+            </label>
+            <input
+              id="username"
+              type="text"
+              value={username}
+              onChange={(e) => setUserName(e.target.value)}
+              placeholder="Choose your identity"
+              className="w-full px-4 py-3 mt-1 text-white bg-[#1a1a1e] border border-purple-500 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600 placeholder:text-gray-500 text-center"
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="email"
+              className="block text-sm text-gray-300 text-center"
+            >
+              Secure Line (Email)
+            </label>
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="classified@example.com"
+              className="w-full px-4 py-3 mt-1 text-white bg-[#1a1a1e] border border-blue-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 placeholder:text-gray-500 text-center"
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="password"
+              className="block text-sm text-gray-300 text-center"
+            >
+              Cipher Key
+            </label>
+            <input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Whisper the Secret"
+              className="w-full px-4 py-3 mt-1 text-white bg-[#1a1a1e] border border-purple-500 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600 placeholder:text-gray-500 text-center"
+            />
+          </div>
+        </div>
+
         <button
-          onClick={handleSignUp}
-          className="w-full px-6 py-4 mb-6 text-sm font-bold text-white bg-purple-500 rounded-lg hover:bg-purple-600 focus:outline-none focus:bg-purple-600"
+          type="submit"
+          className="mt-8 w-full px-6 py-4 text-sm font-bold text-white bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 rounded-lg transition-all duration-300 shadow-lg"
         >
-          Sign Up
+          Enter the System
         </button>
-        {status.type == "success" || status.type == "loading" ? (
-          <p className="text-lg lg:text-md text-center text-green-500 mb-4">
-            {status.msg}
-          </p>
-        ) : (
-          <p className="text-lg text-center text-red-500 mb-4">
-            {status.msg}
-          </p>
-        )}
-        <p className=" text-center text-md lg:text-sm text-gray-900">
-          Already registered?{" "}
+
+        <p className="mt-6 text-center text-md">
+          {status?.msg && (
+            <span
+              className={`font-mono tracking-widest text-sm shadow-sm ${
+                status.type === "success"
+                  ? "text-green-400 before:content-['✔'] before:mr-2 before:text-green-600"
+                  : status.type === "loading"
+                  ? "text-yellow-300 before:content-['↻'] before:mr-2 before:text-yellow-500"
+                  : "text-red-400 before:content-['✖'] before:mr-2 before:text-red-600"
+              }`}
+            >
+              {status.type === "loading"
+                ? "↻ System is initializing…"
+                : status.type === "success"
+                ? "✔ Sequence complete. Access granted."
+                : "✖ Access denied. Resetting protocols..."}
+              <span className="opacity-60 block mt-1 text-sm">
+                {status.msg}
+              </span>
+            </span>
+          )}
+        </p>
+
+        <p className="mt-6 text-center text-sm text-gray-400">
+          Already initiated?{" "}
           <button
             onClick={handleLogin}
-            className="font-bold text-purple-500"
+            className="underline underline-offset-4 text-blue-400 font-semibold hover:text-purple-300"
           >
-            Login Here!
+            Re-Access Portal
           </button>
         </p>
       </form>

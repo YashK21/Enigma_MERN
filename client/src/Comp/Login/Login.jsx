@@ -1,4 +1,4 @@
-import { useState,useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import axios from "axios";
@@ -54,78 +54,97 @@ const Login = () => {
   const handleLoginAndSignUp = () => {
     navigate("/signup");
   };
+  useEffect(() => {
+    setStatus({
+      type: "",
+      msg: "",
+    });
+  }, [username, password]);
   return (
-    <div className="flex justify-center items-center h-screen">
+    <div className="flex justify-center items-center h-screen bg-gradient-to-br from-gray-950 via-black to-gray-900 text-white">
       <form
-        className="w-full max-w-md px-6 py-10 bg-white rounded-lg shadow-md  border border-blue-500"
+        className="w-full max-w-md px-8 py-10 bg-[#0f0f11]/80 backdrop-blur-md border border-blue-700 rounded-xl shadow-[0_0_20px_2px_rgba(0,0,255,0.2)]"
         onSubmit={handleLogin}
       >
-        <h3 className="mb-6 text-4xl font-extrabold text-gray-900 text-center">
-          Sign In
+        <h3 className="mb-8 text-4xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-500 tracking-wider animate-pulse">
+          Access Console
         </h3>
-        <div className="flex flex-col">
-          <label
-            htmlFor="username"
-            className="text-center text-sm text-gray-900"
-          >
-            Username
-          </label>
-          <input
-            id="username"
-            type="username"
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUserName(e.target.value)}
-            className=" text-center w-full px-4 py-3 mb-5 mt-2 text-sm font-medium text-gray-900 bg-gray-200 rounded-lg focus:outline-none focus:bg-gray-300"
-          />
 
-          <label
-            htmlFor="password"
-            className=" text-center text-sm text-gray-900"
-          >
-            Password
-          </label>
-          <input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Enter a password"
-            className=" text-center w-full px-4 py-3 mb-5 mt-2 text-sm font-medium text-gray-900 bg-gray-200 rounded-lg focus:outline-none focus:bg-gray-300"
-          />
+        <div className="flex flex-col space-y-4">
+          <div className="flex flex-col">
+            <label
+              htmlFor="username"
+              className="text-sm text-center text-gray-300"
+            >
+              Identity Code
+            </label>
+            <input
+              id="username"
+              type="text"
+              placeholder="Who are you?"
+              value={username}
+              onChange={(e) => setUserName(e.target.value)}
+              className="text-center w-full px-4 py-3 mt-1 bg-[#1a1a1e] text-white border border-blue-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 placeholder:text-gray-500"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label
+              htmlFor="password"
+              className="text-sm text-center text-gray-300"
+            >
+              Cipher Key
+            </label>
+            <input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Whisper the Secret"
+              className="text-center w-full px-4 py-3 mt-1 bg-[#1a1a1e] text-white border border-purple-500 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600 placeholder:text-gray-500"
+            />
+          </div>
         </div>
-        {status && (
-          <p
-            className={`text-xl md:text-lg ${
-              status.type === "success" || status.type === "loading"
-                ? `text-green-500`
-                : `text-red-500`
-            }  mb-4 text-center`}
+
+        {status?.msg && (
+          <div
+            className={`mt-6 px-6 py-4 text-center text-sm font-mono rounded-md shadow-md tracking-wider border
+      ${
+        status.type === "success"
+          ? "bg-[#111827] text-green-400 border-green-600"
+          : status.type === "loading"
+          ? "bg-[#1f2937] text-yellow-300 border-yellow-500"
+          : "bg-[#1f2937] text-rose-400 border-rose-600"
+      }
+    `}
           >
-            {status.msg}
-          </p>
+            {status.type === "loading"
+              ? "↻ Initiating sequence..."
+              : status.type === "success"
+              ? "✓ Sequence complete. Access granted."
+              : "✗ Sequence failed. Resetting protocols..."}
+            <div className="mt-1 text-sm opacity-70">{status.msg}</div>
+          </div>
         )}
-        {status.type == `loading` || status.type === "success" ? null : (
+
+        {status.type !== "loading" && status.type !== "success" && (
           <button
             type="submit"
-            disabled={
-              status.type === "success" || status.type === "loading"
-                ? true
-                : false
-            }
-            className="w-full px-6 py-4 mb-6 text-sm font-bold text-white bg-purple-500 rounded-lg hover:bg-purple-600 focus:outline-none focus:bg-purple-600"
+            className="mt-6 w-full px-6 py-3 text-sm font-bold tracking-wide text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-lg transition-all duration-300 shadow-lg"
           >
-            {status.type === "loading" ? "Signing in..." : "Sign in"}
+            {status.type === "loading"
+              ? "Decrypting Access..."
+              : "Enter the Portal"}
           </button>
         )}
 
-        <p className=" text-center text-md lg:text-sm text-gray-900">
-          Not registered yet?{" "}
+        <p className="mt-6 text-center text-sm text-gray-400">
+          Not a registered Operator?{" "}
           <button
             onClick={handleLoginAndSignUp}
-            className="font-bold text-purple-500"
+            className="underline underline-offset-4 text-blue-400 font-semibold hover:text-purple-300"
           >
-            Create an Account
+            Initiate Clearance
           </button>
         </p>
       </form>
