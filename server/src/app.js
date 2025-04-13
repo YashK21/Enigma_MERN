@@ -4,9 +4,12 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import fileUpload from "express-fileupload";
+import router from "./routes/user.routes.js";
+import adminRouter from "./routes/admin.routes.js";
+
 dotenv.config({
-  path: "./.env",
-});
+  path:"./.env"
+})
 const app = express();
 app.use(cookieParser());
 app.use(
@@ -29,8 +32,7 @@ let sessionValue = {
 app.use(session(sessionValue));
 app.use(fileUpload());
 
-import router from "./routes/user.routes.js";
-import adminRouter from "./routes/admin.routes.js";
+
 app.use("/api/v1/", router);
 app.use("/", adminRouter);
 export default app;

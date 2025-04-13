@@ -1,44 +1,57 @@
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-
-const userSchema = new mongoose.Schema({
-  username: {
-    type: String,
-    required: true,
-    unique: true,
-    lowercase: true,
-    trim: true,
-    index: true,
+import dotenv from "dotenv"
+dotenv.config(
+  {
+    path:"./.env"
+  }
+)
+const userSchema = new mongoose.Schema(
+  {
+    username: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+      index: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+    },
+    password: {
+      type: String,
+      required: [true, "Password is required"],
+    },
+    currentLvl: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Lvl",
+    },
+    userCurrentScore: {
+      type: Number,
+    },
+    lastCompletedLvls: [
+      {
+        levelId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Lvl",
+        },
+        levelValue: Number,
+      },
+    ],
+    userRefreshToken: {
+      type: String,
+    },
   },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    lowercase: true,
-    trim: true,
-  },
-  password: {
-    type: String,
-    required: [true, "Password is required"],
-  },
-  currentLvl: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Lvl",
-  },
-  intialScore: {
-    type:mongoose.Schema.Types.ObjectId,
-    ref:"Lvl"
-  },
-  userCurrentScore:{
-    type:Number,
-  },
-  userRefreshToken: {
-    type: String,
-  },
-},{
-  timestamps:true
-});
+  {
+    timestamps: true,
+  }
+);
 
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
@@ -50,6 +63,10 @@ userSchema.methods.passCheck = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
 userSchema.methods.genAccessToken = function () {
+  console.log("ACCESS_TOKEN_SECRET:", process.env.ACCESS_TOKEN_SECRET); // Debug log
+  if (!process.env.ACCESS_TOKEN_SECRET) {
+    throw new Error("ACCESS_TOKEN_SECRET is missing in .env file");
+  }
   return jwt.sign(
     {
       _id: this._id,
@@ -62,6 +79,7 @@ userSchema.methods.genAccessToken = function () {
     }
   );
 };
+
 userSchema.methods.genRefreshToken = function () {
   return jwt.sign(
     {
