@@ -5,7 +5,7 @@ import axios from "axios";
 import lvl_Bg from "../img/lvl_Bg.jpg";
 const Level = () => {
   const userContext = useOutletContext();
-  // const localhost = import.meta.env.VITE_LOCALHOST;
+  const localhost = import.meta.env.VITE_LOCALHOST;
   const prodUrl = import.meta.env.VITE_PROD;
   const [userInputAnswer, setUserInputAnswer] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -14,6 +14,8 @@ const Level = () => {
   const navigate = useNavigate();
 
   const userAccessToken = Cookies.get("userAccessToken");
+  console.log(userAccessToken , "from  level");
+    
   const username = localStorage.getItem("username");
   const handleLevelAnsCheck = async () => {
     if (isLoading) return;

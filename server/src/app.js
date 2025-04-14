@@ -8,13 +8,22 @@ import router from "./routes/user.routes.js";
 import adminRouter from "./routes/admin.routes.js";
 
 dotenv.config({
-  path:"./.env"
-})
+  path: "./.env",
+});
 const app = express();
 app.use(cookieParser());
+const allowedOrigins = process.env.CORS_ORIGIN.split(",");
+
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN,
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps or curl)
+      if (!origin || allowedOrigins.includes(origin.trim())) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );
@@ -32,6 +41,5 @@ let sessionValue = {
 app.use(session(sessionValue));
 app.use(fileUpload());
 
-
-app.use("/api/v1/", router,adminRouter);
+app.use("/api/v1/", router, adminRouter);
 export default app;

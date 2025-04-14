@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import { Lvl } from "../model/lvl.model.js";
 import { User } from "../model/user.model.js";
 import ApiError from "../utils/ApiError.js";
@@ -102,7 +101,18 @@ const loginUser = async (req, res) => {
   const loggedInUser = await User.findById(existedUser._id).select("-password");
   return res
     .status(200)
-    .cookie("userAccessToken", userAccessToken) // add when checking locally with postman - it behaves the same for auth like we have in client side
+    .cookie("userAccessToken", userAccessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // ensure it's secure in prod
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+      maxAge: 24 * 60 * 60 * 1000, // 1 day
+    })
+    .cookie("userRefreshToken", userRefreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    }) // add when checking locally with postman - it behaves the same for auth like we have in client side
     .json(
       new ApiRes(
         200,
