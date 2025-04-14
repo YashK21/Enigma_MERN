@@ -44,7 +44,7 @@ const Layout = () => {
     }
   }, [username, prodUrl, userAccessToken]);
   useEffect(() => {
-    const excludedPaths = ["/", "/login", "/signup"];
+    const excludedPaths = ["/", "/login", "/signup","/admin","/admin/level","/admin/login"];
     if (excludedPaths.includes(location.pathname)) return;
     handleUserLevelDetails();
   }, [handleUserLevelDetails, location.pathname]);

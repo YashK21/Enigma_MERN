@@ -9,7 +9,7 @@ const Level = () => {
   const prodUrl = import.meta.env.VITE_PROD;
   const [userInputAnswer, setUserInputAnswer] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
+  const [isCorrect, setIsCorrect] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -19,7 +19,7 @@ const Level = () => {
     if (isLoading) return;
     setIsLoading(true);
     try {
-      await axios.post(
+      const res = await axios.post(
         `${prodUrl}/levelanscheck/${userContext?.userDetails?.Lvl_No}`,
         {
           username,
@@ -34,8 +34,12 @@ const Level = () => {
           withCredentials: true,
         }
       );
+      if (res?.data?.statusCode == 200 && res?.data?.success == true) {
+        setIsCorrect(true);
+      }
     } catch (error) {
       console.log(error?.response);
+      setIsCorrect(false);
     } finally {
       setTimeout(() => setIsLoading(false), 500);
     }
@@ -45,8 +49,17 @@ const Level = () => {
     const excludedPaths = ["/", "/login", "/signup"];
     const isExcluded = excludedPaths.includes(location.pathname);
     if (isExcluded) return;
-  }, [location.pathname]);
-
+    if (isCorrect) {
+      console.log("inside isCOrrect useffect");
+      const nextLevel = parseInt(userContext?.userDetails?.Lvl_No || 1) + 1;
+      navigate(`/level/${nextLevel}`);
+    }
+  }, [
+    location.pathname,
+    isCorrect,
+    navigate,
+    userContext?.userDetails?.Lvl_No,
+  ]);
   const handleLogout = async () => {
     console.log("handle logout ");
     try {

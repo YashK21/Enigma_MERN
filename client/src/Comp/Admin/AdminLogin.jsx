@@ -1,7 +1,7 @@
 import axios from "axios";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Cookies from "js-cookie"
+import Cookies from "js-cookie";
 const AdminLoginForm = () => {
   const localhost = import.meta.env.VITE_LOCALHOST;
   const prodUrl = import.meta.env.VITE_PROD;
@@ -10,110 +10,76 @@ const AdminLoginForm = () => {
   const [msg, setMsg] = useState("");
   const navigate = useNavigate();
   const handleSubmit = async (e) => {
-    e.preventDefault()
-
-    await axios.post(
-      `${localhost}/admin/login`,
-      {
-        username,
-        password,
-      },
-      {
-        headers: {
-          "content-type": "application/json",
-        },
-        withCredentials:true
-      }
-    )
-    .then((res)=>{
-      // console.log(res)
-      let loggedInAdmin = res.data.message.admin.username
-      // console.log(loggedInAdmin)
-      localStorage.setItem("adminUsername" , loggedInAdmin)
-      Cookies.set("adminAccessToken", res.data.message.adminAccessToken)
-      setUsername("")
-      setPassword("")
-      setMsg(res.data.data)
-      setTimeout(()=>{
-        navigate("/admin")
-      },1000)
-    })
-    .catch((err)=>{
-      console.error(err)
-      setMsg(err.response ? err.response.data.errorMessage : 'An error occurred')
-    })
-    // if (!res.ok) {
-    //   res = await res.json();
-    //   console.log(res.ok);
-    //   console.log(res?.errorMessage);
-    //   return setMsg(res?.errorMessage);
-    // }
-    // res = await res.json();
-    // console.log(res.data);
-    // let loggedInAdmin = res.message.admin.username;
-    // localStorage.setItem("admin", loggedInAdmin);
-    // setUsername("");
-    // setPassword("");
-    // setMsg(res.data);
-    // setTimeout(() => {
-    //   navigate("/admin");
-    // }, 1000);
+    e.preventDefault();
+    try {
+      const res = await axios.post(
+        `${localhost}/admin/login`,
+        { username, password },
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
+      );
+      console.log(res?.data);
+      setMsg(res?.data?.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
+
   return (
-    <div className="max-w-md mx-auto mt-8 p-6 bg-white rounded-lg shadow-lg">
-      <h2 className="text-2xl font-semibold mb-4 text-center">Admin Login</h2>
+    <div className="font-pressStart max-w-md mx-auto mt-12 p-6 bg-gradient-to-br from-[#0f0c29] via-[#302b63] to-[#24243e] rounded-xl shadow-2xl border border-gray-700 backdrop-blur-md">
+      <h2 className="text-3xl font-bold mb-6 text-center text-gray-100 tracking-widest uppercase">
+        Gatekeeper Access
+      </h2>
       <form onSubmit={handleSubmit}>
-        <div className="mb-4">
+        <div className="mb-5">
           <label
             htmlFor="username"
-            className="block text-sm font-medium text-gray-700"
+            className="block text-sm font-semibold text-purple-300 mb-1"
           >
-            Username
+            Codename
           </label>
           <input
             type="text"
             id="username"
             name="username"
             value={username}
-            onChange={(e) => {
-              setUsername(e.target.value);
-            }}
-            className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
-            placeholder="Enter your username"
+            onChange={(e) => setUsername(e.target.value)}
+            className="mt-1 p-2 w-full bg-[#1e1e2f] text-gray-100 border border-purple-500 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
+            placeholder="e.g. shadowSeeker"
             required
           />
         </div>
-        <div className="mb-4">
+        <div className="mb-6">
           <label
             htmlFor="password"
-            className="block text-sm font-medium text-gray-700"
+            className="block text-sm font-semibold text-purple-300 mb-1"
           >
-            Password
+            Cipher Key
           </label>
           <input
             type="password"
             id="password"
             name="password"
             value={password}
-            onChange={(e) => {
-              setPassword(e.target.value);
-            }}
-            className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
-            placeholder="Enter your password"
+            onChange={(e) => setPassword(e.target.value)}
+            className="mt-1 p-2 w-full bg-[#1e1e2f] text-gray-100 border border-purple-500 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
+            placeholder="••••••••"
             required
           />
         </div>
         <div className="text-center">
           <button
             type="submit"
-            className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
+            className="px-6 py-2 bg-purple-600 text-white font-semibold rounded-md hover:bg-purple-700 transition-all duration-300 shadow-lg"
           >
-            Login
+            Unlock
           </button>
         </div>
       </form>
-      <div>{msg}</div>
+      <p className="text-center mt-4 text-green-400 italic">{msg}</p>
     </div>
   );
 };
