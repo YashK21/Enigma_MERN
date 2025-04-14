@@ -41,7 +41,6 @@ const Login = () => {
       console.log(user);
       const lastLvlComplete =
         user.lastCompletedLvls[user.lastCompletedLvls.length - 1];
-      console.log(lastLvlComplete?.levelValue + 1);
 
       if (parseInt(lastLvlComplete?.levelValue || 1) !== 1) {
         navigate(`/level/${lastLvlComplete?.levelValue + 1}`);

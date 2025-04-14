@@ -1,4 +1,3 @@
-
 const Contact = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-[#0a0a0a] to-gray-900 text-green-300 font-mono flex items-center justify-center px-4 py-10">
@@ -6,7 +5,7 @@ const Contact = () => {
         <h1 className="text-4xl mb-6 text-center tracking-widest text-green-400 animate-pulse">
           ☠️ Contact the Keepers
         </h1>
-        <form className="space-y-6">
+        {/* <form className="space-y-6">
           <div>
             <label
               htmlFor="name"
@@ -58,11 +57,19 @@ const Contact = () => {
           >
             TRANSMIT
           </button>
-        </form>
+        </form> */}
+        <div className="mt-8 text-center text-green-400 text-xl">
+          <p className="text-gray-500">
+            🌑 Only those who dare to conquer the labyrinth of trials shall earn
+            the right to stand before my shadow. 🔮 Unlock each cryptic level,
+            for I linger in the depths, shrouded in anticipation. The hunt is
+            yours, seeker of the unseen. 🕯️✨
+            <span className="text-xl">🔐</span>
+          </p>
+        </div>
       </div>
     </div>
   );
 };
-
 
 export default Contact;
