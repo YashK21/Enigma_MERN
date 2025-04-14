@@ -96,7 +96,7 @@ const loginUser = async (req, res) => {
 
   console.log(existedUser);
 
-  const { userAccessToken, userRefreshToken } =
+  const { userAccessToken } =
     await genAccessTokenandRefreshToken(existedUser._id);
 
   const loggedInUser = await User.findById(existedUser._id).select("-password");
@@ -108,9 +108,6 @@ const loginUser = async (req, res) => {
         200,
         {
           user: loggedInUser,
-          userAccessToken,
-          userRefreshToken,
-          // currentLvlScore,
         },
         "User logged in successfully"
       )

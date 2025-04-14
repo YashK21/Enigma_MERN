@@ -33,6 +33,5 @@ app.use(session(sessionValue));
 app.use(fileUpload());
 
 
-app.use("/api/v1/", router);
-app.use("/", adminRouter);
+app.use("/api/v1/", router,adminRouter);
 export default app;
