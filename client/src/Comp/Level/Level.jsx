@@ -14,7 +14,6 @@ const Level = () => {
   const navigate = useNavigate();
 
   const userAccessToken = Cookies.get("userAccessToken");
-  console.log(userAccessToken , "from  level");
     
   const username = localStorage.getItem("username");
   const handleLevelAnsCheck = async () => {

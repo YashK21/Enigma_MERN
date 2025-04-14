@@ -15,7 +15,6 @@ const Layout = () => {
   const userAccessToken = Cookies.get("userAccessToken");
   const localhost = import.meta.env.VITE_LOCALHOST;
   const prodUrl = import.meta.env.VITE_PROD;
-  console.log(userAccessToken ,"from layout");
   
   const handleUserLevelDetails = useCallback(async () => {
     setIsChecking(true);
