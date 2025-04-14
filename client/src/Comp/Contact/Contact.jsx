@@ -1,63 +1,68 @@
-import React from "react";
 
 const Contact = () => {
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-semibold mb-4">Contact Us</h1>
-      <div className="max-w-lg mx-auto">
-        <form className="space-y-4">
+    <div className="min-h-screen bg-gradient-to-br from-black via-[#0a0a0a] to-gray-900 text-green-300 font-mono flex items-center justify-center px-4 py-10">
+      <div className="w-full max-w-2xl bg-white/5 backdrop-blur-sm border border-green-800 rounded-xl p-8 shadow-[0_0_20px_rgba(0,255,128,0.2)]">
+        <h1 className="text-4xl mb-6 text-center tracking-widest text-green-400 animate-pulse">
+          ☠️ Contact the Keepers
+        </h1>
+        <form className="space-y-6">
           <div>
             <label
               htmlFor="name"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm tracking-wider uppercase text-green-500"
             >
-              Your Name
+              Your Codename
             </label>
             <input
               type="text"
               id="name"
               name="name"
-              className="mt-1 p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:border-blue-500"
+              placeholder="Agent X"
+              className="mt-2 w-full p-3 rounded-md bg-black/30 border border-green-700 text-green-200 placeholder-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
             />
           </div>
           <div>
             <label
               htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm tracking-wider uppercase text-green-500"
             >
-              Your Email
+              Cipher Email
             </label>
             <input
               type="email"
               id="email"
               name="email"
-              className="mt-1 p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:border-blue-500"
+              placeholder="shadow@matrix.mail"
+              className="mt-2 w-full p-3 rounded-md bg-black/30 border border-green-700 text-green-200 placeholder-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
             />
           </div>
           <div>
             <label
               htmlFor="message"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm tracking-wider uppercase text-green-500"
             >
-              Message
+              Encrypted Message
             </label>
             <textarea
               id="message"
               name="message"
-              rows="4"
-              className="mt-1 p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:border-blue-500"
+              rows="5"
+              placeholder="Speak in code..."
+              className="mt-2 w-full p-3 rounded-md bg-black/30 border border-green-700 text-green-200 placeholder-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
             ></textarea>
           </div>
           <button
             type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            className="w-full bg-green-600 hover:bg-green-700 text-black font-bold py-3 px-6 rounded-md tracking-widest transition-all duration-200 shadow-[0_0_10px_rgba(0,255,128,0.5)] hover:shadow-[0_0_20px_rgba(0,255,128,0.9)]"
           >
-            Submit
+            TRANSMIT
           </button>
         </form>
       </div>
     </div>
   );
 };
+
 
 export default Contact;

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { Outlet, useNavigate, useLocation } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import NavBar from "../NavBar/NavBar";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -9,16 +9,17 @@ const Layout = () => {
     Lvl_Img: "",
     Lvl_Score: "",
   });
-  const navigate = useNavigate();
+  const [isChecking, setIsChecking] = useState(false);
   const location = useLocation();
   const username = localStorage.getItem("username");
   const userAccessToken = Cookies.get("userAccessToken");
-  const localhost = import.meta.env.VITE_LOCALHOST;
-  // const prodUrl = import.meta.env.VITE_PROD;
+  // const localhost = import.meta.env.VITE_LOCALHOST;
+  const prodUrl = import.meta.env.VITE_PROD;
   const handleUserLevelDetails = useCallback(async () => {
+    setIsChecking(true);
     try {
       const res = await axios.post(
-        `${localhost}/current-user`,
+        `${prodUrl}/current-user`,
         {
           username,
         },
@@ -36,20 +37,28 @@ const Layout = () => {
         Lvl_Img,
         Lvl_Score,
       });
-      navigate(`/level/${Lvl_No}`);
+      setIsChecking(false);
     } catch (error) {
       console.log(error);
+      setIsChecking(false);
     }
-  }, [username, localhost, userAccessToken,navigate]);
+  }, [username, prodUrl, userAccessToken]);
   useEffect(() => {
     const excludedPaths = ["/", "/login", "/signup"];
     if (excludedPaths.includes(location.pathname)) return;
     handleUserLevelDetails();
   }, [handleUserLevelDetails, location.pathname]);
+  if (isChecking) {
+    return (
+      <div className="h-screen w-screen flex items-center justify-center bg-black text-green-400 text-xl font-mono animate-pulse">
+        Enigma is decrypting your fate...
+      </div>
+    );
+  }
   return (
     <>
       {username ? <NavBar /> : null}
-      <Outlet context={userDetails} />
+      <Outlet context={{ userDetails, isChecking }} />
     </>
   );
 };

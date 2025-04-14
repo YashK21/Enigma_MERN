@@ -1,6 +1,4 @@
 import axios from "axios";
-import React from "react";
-
 const Leaderboard = () => {
   const localhost = import.meta.env.VITE_LOCALHOST;
   const prodUrl = import.meta.env.VITE_PROD;
@@ -13,50 +11,59 @@ const Leaderboard = () => {
       });
   };
   return (
-    <div className="container mx-auto">
-      <h1 className="text-3xl mt-4 mb-6 font-semibold text-center">
-        Leaderboard
+    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-green-300 font-mono px-4 py-12 flex flex-col items-center justify-center">
+      <h1 className="text-4xl mb-10 font-bold tracking-widest text-center text-green-400 animate-pulse">
+        🧩 THE RANKING GRID
       </h1>
-      <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+      <div className="overflow-x-auto w-full max-w-4xl shadow-[0_0_20px_rgba(0,255,128,0.1)] border border-green-700 rounded-xl backdrop-blur bg-white/5">
+        <table className="min-w-full divide-y divide-green-800">
+          <thead className="bg-green-950/60">
             <tr>
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                className="px-6 py-4 text-left text-xs font-bold text-green-400 uppercase tracking-wider"
               >
                 Rank
               </th>
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                className="px-6 py-4 text-left text-xs font-bold text-green-400 uppercase tracking-wider"
               >
-                Name
+                Alias
               </th>
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                className="px-6 py-4 text-left text-xs font-bold text-green-400 uppercase tracking-wider"
               >
-                Score
+                Intel Score
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            <tr>
-              <td className="px-6 py-4 whitespace-nowrap">1</td>
-              <td className="px-6 py-4 whitespace-nowrap">John Doe</td>
-              <td className="px-6 py-4 whitespace-nowrap">1000</td>
+          <tbody className="divide-y divide-green-900">
+            <tr className="hover:bg-green-900/30 transition duration-200">
+              <td className="px-6 py-4 whitespace-nowrap text-green-300">1</td>
+              <td className="px-6 py-4 whitespace-nowrap text-green-100">
+                ShadowGhost
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap text-green-200">
+                1000
+              </td>
             </tr>
-            <tr>
-              <td className="px-6 py-4 whitespace-nowrap">2</td>
-              <td className="px-6 py-4 whitespace-nowrap">Jane Smith</td>
-              <td className="px-6 py-4 whitespace-nowrap">900</td>
+            <tr className="hover:bg-green-900/30 transition duration-200">
+              <td className="px-6 py-4 whitespace-nowrap text-green-300">2</td>
+              <td className="px-6 py-4 whitespace-nowrap text-green-100">
+                EchoWhisper
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap text-green-200">
+                900
+              </td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
   );
+  
 };
 
 export default Leaderboard;
