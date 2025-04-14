@@ -33,8 +33,9 @@ const Login = () => {
           withCredentials: true,
         }
       );
-      const { user } = res.data.message;
+      const { user, userAccessToken } = res.data.message;
       const userName = user?.username;
+      Cookies.set("userAccessToken", userAccessToken);
       localStorage.setItem("username", userName);
       setStatus({ type: "success", msg: `${userName} ${res.data.data}` });
       console.log(user);
