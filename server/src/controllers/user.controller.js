@@ -27,18 +27,12 @@ const genAccessTokenandRefreshToken = async (userId) => {
   }
 };
 
-const getNextLvlObjectId = async (currentLvlNo) => {
-  const nextLvl = await Lvl.findOne({ Lvl_No: currentLvlNo + 1 });
-  return nextLvl._id;
-};
-
 //reg
 const registerUser = async (req, res) => {
   const { username, email, password } = req.body;
   if (
     [email, username, password].some((emptyField) => emptyField.trim() === "")
   ) {
-    // throw new ApiError(400, "All Fields are required");
     return res.status(400).json(new ApiError(400, "All Fields are required"));
   }
 
@@ -47,13 +41,11 @@ const registerUser = async (req, res) => {
     $or: [{ username }, { email }],
   });
   if (existedUser) {
-    // throw new ApiError(400, "User Already Exists")
     return res.status(400).json(new ApiError(400, "User Already Exists"));
   }
 
   //currentLvl
   const currentLvl = await Lvl.findOne({ Lvl_No: "1" });
-  // const intialScore = await Lvl.findOne({ Lvl_InitialScore: "0" });
   const createdUser = await User.create({
     email,
     username: username.toLowerCase(),
@@ -68,7 +60,6 @@ const registerUser = async (req, res) => {
     "-password -userRefreshToken"
   );
   if (!userSaved) {
-    // throw new ApiError(500, "Something went wrong while registration");
     return res
       .status(500)
       .json(new ApiError(500, "Something went wrong while registration"));
@@ -80,7 +71,6 @@ const registerUser = async (req, res) => {
 const loginUser = async (req, res) => {
   const { username, password } = req.body;
   if (!username || !password) {
-    // throw new ApiError(400, "username is required");
     return res
       .status(400)
       .json(new ApiError(400, "username  and password is required"));
@@ -90,12 +80,10 @@ const loginUser = async (req, res) => {
     username,
   });
   if (!existedUser) {
-    // throw new ApiError(404, "User not found");
     return res.status(400).json(new ApiError(404, "User not found"));
   }
   const passwordValid = await existedUser.passCheck(password);
   if (!passwordValid) {
-    // throw new ApiError(401, "Password is wrong!!");
     return res.status(401).json(new ApiError(404, "Password is wrong!!"));
   }
 
@@ -107,11 +95,6 @@ const loginUser = async (req, res) => {
   }
 
   console.log(existedUser);
-  // if(!username.)
-  // let currentLvlScore = await Lvl.findOne({ Lvl_InitialScore: "0" });
-  // console.log(currentLvlScore.Lvl_InitialScore);
-  // currentLvlScore = currentLvlScore._id;
-  // console.log(currentLvlScore);
 
   const { userAccessToken, userRefreshToken } =
     await genAccessTokenandRefreshToken(existedUser._id);
@@ -170,16 +153,18 @@ const getCurrentUserDetails = async (req, res) => {
     const currentUserName = await User.findOne({
       username,
     });
+
     const currentLvl = currentUserName?.currentLvl;
     const currentLvlDetails = await Lvl.findById({
       _id: currentLvl,
     });
-    const { Lvl_No, Lvl_Img, Lvl_Score } = currentLvlDetails;
+
     if (!currentLvlDetails) {
       return res
         .status(404)
         .json(new ApiError(404, `Lvl not found for id: ${Lvl_No}`));
     }
+    const { Lvl_No, Lvl_Img, Lvl_Score } = currentLvlDetails;
     return res.status(200).json(
       new ApiRes(200, `currentLvlDetails fetched successfully!`, {
         Lvl_No,
