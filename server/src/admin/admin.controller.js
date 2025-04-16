@@ -19,8 +19,7 @@ const genAdminAccessToken = async (adminId) => {
 const adminLogin = async (req, res) => {
   try {
     const { username, password } = req.body;
-    console.log(username,password);
-    
+
     if (!username) {
       return res.status(400).json(new ApiError(400, "username is required"));
     }
@@ -41,8 +40,9 @@ const adminLogin = async (req, res) => {
 
     const { adminAccessToken } = await genAdminAccessToken(admin._id);
     const loggedInAdmin = await Admin.findById(admin._id).select(
-      "-password -adminAccessToken"
+      "-password -adminAccessToken -_id"
     );
+
     return (
       res
         .status(200)
@@ -53,7 +53,6 @@ const adminLogin = async (req, res) => {
             200,
             {
               admin: loggedInAdmin,
-              adminAccessToken,
             },
             "Admin logged in successfully"
           )

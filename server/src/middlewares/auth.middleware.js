@@ -9,7 +9,6 @@ const verifyJWT = async (req, res, next) => {
       req.cookies?.userAccessToken ||
       req.header("Authorization")?.replace("Bearer ", "");
     if (!token) {
-      // throw new ApiError(401, "Unauthorized Request")
       return res.status(401).json(new ApiError(401, "Unauthorized Request"));
     }
     const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
@@ -17,16 +16,13 @@ const verifyJWT = async (req, res, next) => {
       "-password -userRefreshToken"
     );
     if (!currentUser) {
-      // throw new ApiError(401, "Invalid User Access Token");
       return res
         .status(401)
         .json(new ApiError(401, "Invalid User Access Token"));
     }
     req.user = currentUser;
-    // console.log(req.user);
     next();
   } catch (error) {
-    // throw new ApiError(401, error?.message || "Invalid User Access Token");
     return res
       .status(401)
       .json(new ApiError(401, error?.message || "Invalid User Access Token"));

@@ -63,7 +63,7 @@ userSchema.methods.passCheck = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
 userSchema.methods.genAccessToken = function () {
-  console.log("ACCESS_TOKEN_SECRET:", process.env.ACCESS_TOKEN_SECRET); // Debug log
+  // console.log("ACCESS_TOKEN_SECRET:", process.env.ACCESS_TOKEN_SECRET); // Debug log
   if (!process.env.ACCESS_TOKEN_SECRET) {
     throw new Error("ACCESS_TOKEN_SECRET is missing in .env file");
   }

@@ -1,3 +1,4 @@
+import cookieOptions from "../config/cookiesOptions.js";
 import { Lvl } from "../model/lvl.model.js";
 import { User } from "../model/user.model.js";
 import ApiError from "../utils/ApiError.js";
@@ -95,32 +96,19 @@ const loginUser = async (req, res) => {
 
   console.log(existedUser);
 
-  const { userAccessToken, userRefreshToken } =
-    await genAccessTokenandRefreshToken(existedUser._id);
+  const { userAccessToken } = await genAccessTokenandRefreshToken(
+    existedUser._id
+  );
 
   const loggedInUser = await User.findById(existedUser._id).select("-password");
   return res
     .status(200)
-    .cookie("userAccessToken", userAccessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // ensure it's secure in prod
-      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
-      maxAge: 24 * 60 * 60 * 1000, // 1 day
-    })
-    .cookie("userRefreshToken", userRefreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    }) // add when checking locally with postman - it behaves the same for auth like we have in client side
+    .cookie("userAccessToken", userAccessToken, cookieOptions)
     .json(
       new ApiRes(
         200,
         {
           user: loggedInUser,
-          userAccessToken,
-          userRefreshToken,
-          // currentLvlScore,
         },
         "User logged in successfully"
       )
@@ -157,8 +145,10 @@ const logoutUser = async (req, res) => {
   }
 };
 
-const getCurrentUserDetails = async (req, res) => {
+const getUserLevelDetails  = async (req, res) => {
   const { username } = req.body;
+  console.log(username);
+
   try {
     const currentUserName = await User.findOne({
       username,
@@ -202,12 +192,10 @@ const levelAnsCheck = async (req, res) => {
       return res.status(400).json(new ApiError(400, "Wrong Answer!"));
     }
 
-    const user = await User.findOne({ username }).populate("currentLvl");
 
     const userNextLvl = await Lvl.findOne({
       Lvl_No: Number(currentLvlDetails?.Lvl_No) + 1,
     });
-    console.log(typeof user?.userCurrentScore + currentLvlDetails?.Lvl_Score);
 
     const updatedUserDetails = await User.findOneAndUpdate(
       {
@@ -246,10 +234,25 @@ const levelAnsCheck = async (req, res) => {
       .json(new ApiError(500, "Internal Server Error while submission!"));
   }
 };
+
+//for leaderboard
+const getAllUserScore = async (_, res) => {
+  try {
+    const userScores = await User.find({})
+      .sort({ userCurrentScore: -1 })
+      .select("username userCurrentScore -_id");
+    console.log(userScores);
+
+    return res.status(200).json(new ApiRes(200, "Users Score", userScores));
+  } catch (error) {
+    console.log(error);
+  }
+};
 export {
   registerUser,
   loginUser,
   logoutUser,
-  getCurrentUserDetails,
+  getUserLevelDetails  as getCurrentUserDetails,
   levelAnsCheck,
+  getAllUserScore,
 };

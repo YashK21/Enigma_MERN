@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  getAllUserScore,
   getCurrentUserDetails,
   levelAnsCheck,
   loginUser,
@@ -12,7 +13,7 @@ router.route("/register").post(registerUser);
 router.route("/login").post(loginUser);
 router.route("/current-user").post(verifyJWT, getCurrentUserDetails);
 router.route("/levelanscheck/:lvl").post(verifyJWT, levelAnsCheck);
-router.route("/leaderboard").get(levelAnsCheck);
+router.route("/leaderboard").get(getAllUserScore);
 router.route("/logout").post(verifyJWT, logoutUser);
 
 export default router;
