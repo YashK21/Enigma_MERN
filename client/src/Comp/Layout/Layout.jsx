@@ -2,7 +2,8 @@ import { useCallback, useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import NavBar from "../NavBar/NavBar";
 import axios from "axios";
-import Cookies from "js-cookie";
+
+import envConfig from "../../config/env.config";
 const Layout = () => {
   const [userDetails, setUserDetails] = useState({
     Lvl_No: "",
@@ -12,22 +13,18 @@ const Layout = () => {
   const [isChecking, setIsChecking] = useState(false);
   const location = useLocation();
   const username = localStorage.getItem("username");
-  const userAccessToken = Cookies.get("userAccessToken");
-  const localhost = import.meta.env.VITE_LOCALHOST;
-  const prodUrl = import.meta.env.VITE_PROD;
-  
+
   const handleUserLevelDetails = useCallback(async () => {
     setIsChecking(true);
     try {
       const res = await axios.post(
-        `${prodUrl}/current-user`,
+        `${envConfig.API_BASE_URL}/current-user`,
         {
           username,
         },
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${userAccessToken}`,
           },
           withCredentials: true,
         }
@@ -43,15 +40,22 @@ const Layout = () => {
       console.log(error);
       setIsChecking(false);
     }
-  }, [username, prodUrl, userAccessToken]);
+  }, [username]);
   useEffect(() => {
-    const excludedPaths = ["/", "/login", "/signup","/admin","/admin/level","/admin/login"];
+    const excludedPaths = [
+      "/",
+      "/login",
+      "/signup",
+      "/admin",
+      "/admin/level",
+      "/admin/login",
+    ];
     if (excludedPaths.includes(location.pathname)) return;
     handleUserLevelDetails();
   }, [handleUserLevelDetails, location.pathname]);
   if (isChecking) {
     return (
-      <div className="h-screen w-screen flex items-center justify-center bg-black text-green-400 text-xl font-mono animate-pulse">
+      <div className="h-screen w-screen flex items-center justify-center bg-black text-green-400 text-xl font-pressStart animate-pulse">
         Enigma is decrypting your fate...
       </div>
     );

@@ -1,27 +1,25 @@
 import { useEffect, useState } from "react";
-import Cookies from "js-cookie";
+
 import { useNavigate, useLocation, useOutletContext } from "react-router-dom";
 import axios from "axios";
 import lvl_Bg from "../img/lvl_Bg.jpg";
+import envConfig from "../../config/env.config";
 const Level = () => {
   const userContext = useOutletContext();
-  const localhost = import.meta.env.VITE_LOCALHOST;
-  const prodUrl = import.meta.env.VITE_PROD;
   const [userInputAnswer, setUserInputAnswer] = useState("");
+  const [feedback, setFeedback] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
-  const userAccessToken = Cookies.get("userAccessToken");
-    
   const username = localStorage.getItem("username");
   const handleLevelAnsCheck = async () => {
     if (isLoading) return;
     setIsLoading(true);
     try {
       const res = await axios.post(
-        `${prodUrl}/levelanscheck/${userContext?.userDetails?.Lvl_No}`,
+        `${envConfig.API_BASE_URL}/levelanscheck/${userContext?.userDetails?.Lvl_No}`,
         {
           username,
           userInputAnswer,
@@ -30,19 +28,26 @@ const Level = () => {
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${userAccessToken}`,
           },
           withCredentials: true,
         }
       );
       if (res?.data?.statusCode == 200 && res?.data?.success == true) {
         setIsCorrect(true);
+        setFeedback("correct");
+      } else {
+        setIsCorrect(false);
+        setFeedback("wrong");
       }
     } catch (error) {
       console.log(error?.response);
       setIsCorrect(false);
+      setFeedback("wrong");
     } finally {
-      setTimeout(() => setIsLoading(false), 500);
+      setTimeout(() => {
+        setIsLoading(false);
+        setFeedback(null); 
+      }, 2500);
     }
   };
 
@@ -54,6 +59,7 @@ const Level = () => {
       console.log("inside isCOrrect useffect");
       const nextLevel = parseInt(userContext?.userDetails?.Lvl_No || 1) + 1;
       navigate(`/level/${nextLevel}`);
+      localStorage.setItem("currentLvl", nextLevel);
     }
   }, [
     location.pathname,
@@ -65,21 +71,19 @@ const Level = () => {
     console.log("handle logout ");
     try {
       const res = await axios.post(
-        `${prodUrl}/logout`,
+        `${envConfig.API_BASE_URL}/logout`,
         {
           username,
         },
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${userAccessToken}`,
           },
           withCredentials: true,
         }
       );
       if (res?.data?.statusCode == 200) {
         localStorage.clear();
-        Cookies.remove("userAccessToken");
         navigate(`/login`);
       }
     } catch (error) {
@@ -189,6 +193,25 @@ const Level = () => {
             : "The secrets of this level lie in your answer..."}
         </p>
       </div>
+      {feedback && (
+        <div
+          className={`
+      px-4 py-2 mb-3 rounded-lg text-center font-pressStart animate-pulse
+      ${
+        feedback === "correct"
+          ? "bg-green-700 text-white"
+          : "bg-red-700 text-white"
+      }
+      shadow-lg border-2
+      ${feedback === "correct" ? "border-green-300" : "border-red-300"}
+      lg:text-xl text-sm
+    `}
+        >
+          {feedback === "correct"
+            ? "Correct Answer! 🎉"
+            : "Wrong Answer. Try Again! ❌"}
+        </div>
+      )}
 
       <div
         className="

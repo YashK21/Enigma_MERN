@@ -1,12 +1,11 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
+
 import axios from "axios";
+import envConfig from "../../config/env.config";
 
 const Login = () => {
   const isSubmittingRef = useRef(false);
-  const localhost = import.meta.env.VITE_LOCALHOST;
-  const prodUrl = import.meta.env.VITE_PROD;
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState({
@@ -26,16 +25,15 @@ const Login = () => {
     setStatus({ type: "loading", msg: "Logging in..." });
     try {
       const res = await axios.post(
-        `${prodUrl}/login`,
+        `${envConfig.API_BASE_URL}/login`,
         { username, password },
         {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
         }
       );
-      const { user, userAccessToken } = res.data.message;
+      const { user } = res.data.message;
       const userName = user?.username;
-      Cookies.set("userAccessToken", userAccessToken);
       localStorage.setItem("username", userName);
       setStatus({ type: "success", msg: `${userName} ${res.data.data}` });
       console.log(user);
@@ -43,6 +41,7 @@ const Login = () => {
         user.lastCompletedLvls[user.lastCompletedLvls.length - 1];
 
       if (parseInt(lastLvlComplete?.levelValue || 1) !== 1) {
+        console.log(lastLvlComplete?.levelValue + 1);
         navigate(`/level/${lastLvlComplete?.levelValue + 1}`);
       } else {
         navigate("/rules");

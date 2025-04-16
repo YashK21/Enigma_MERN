@@ -1,10 +1,10 @@
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
+import envConfig from "../../config/env.config";
+
 const AdminLoginForm = () => {
-  const localhost = import.meta.env.VITE_LOCALHOST;
-  const prodUrl = import.meta.env.VITE_PROD;
+  
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [msg, setMsg] = useState("");
@@ -13,7 +13,7 @@ const AdminLoginForm = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        `${localhost}/admin/login`,
+        `${envConfig.API_BASE_URL}/admin/login`,
         { username, password },
         {
           headers: { "Content-Type": "application/json" },
@@ -22,6 +22,9 @@ const AdminLoginForm = () => {
       );
       console.log(res?.data);
       setMsg(res?.data?.data);
+      if(res?.data?.statusCode == 200) {
+        navigate("/admin")
+      }
     } catch (error) {
       console.log(error);
     }

@@ -1,18 +1,15 @@
-import React, { useState, useRef } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
 import axios from "axios";
+import envConfig from "../../config/env.config";
 
 const Admin = () => {
-  const localhost = import.meta.env.VITE_LOCALHOST;
-  const prodUrl = import.meta.env.VITE_PROD;
   const [LvlNo, setLvlNo] = useState("");
   const [LvlImg, setLvlImg] = useState(null);
   const [LvlAns, setLvlAns] = useState("");
   const [LvlScore,setLvlScore] = useState("")
   const navigate = useNavigate();
   const formRef = useRef(null);
-  const adminAccessToken = Cookies.get("adminAccessToken");
   const handleSubmission = async (e) => {
     e.preventDefault();
     try {
@@ -22,10 +19,9 @@ const Admin = () => {
       formData.append("Lvl_Ans", LvlAns);
       formData.append("Lvl_Score",LvlScore)
       await axios
-        .post(`${localhost}/admin`, formData, {
+        .post(`${envConfig.API_BASE_URL}/admin`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${adminAccessToken}`,
           },
           withCredentials: true,
         })
@@ -52,19 +48,16 @@ const Admin = () => {
   const handleLogout = async () => {
     await axios
       .post(
-        `${localhost}/admin/logout`,
+        `${envConfig.API_BASE_URL}/admin/logout`,
         {},
         {
           headers: {
             "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${adminAccessToken}`,
           },
           withCredentials: true,
         }
       )
       .then(() => {
-        Cookies.remove("connect.sid");
-        Cookies.remove("adminAccessToken");
         localStorage.removeItem("admin");
         navigate("/admin/login");
       })

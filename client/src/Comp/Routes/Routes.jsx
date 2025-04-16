@@ -1,5 +1,4 @@
-import { Navigate, createBrowserRouter } from "react-router-dom";
-import Cookies from "js-cookie";
+import { createBrowserRouter } from "react-router-dom";
 import {
   Layout,
   Welcome,
@@ -13,6 +12,9 @@ import {
   AdminLoginForm,
   Contact,
 } from "../index.js";
+import AuthGuard from "../../utils/AuthGuard.jsx";
+const clientUrlDev = import.meta.env.VITE_CLIENT_URL_DEV
+
 const Routes = createBrowserRouter([
   {
     path: "/",
@@ -33,31 +35,31 @@ const Routes = createBrowserRouter([
       {
         path: "rules",
         element: (
-          <ProtectedUserRoute>
+          <AuthGuard url={`${clientUrlDev}/rules`} redirectTo={"/noauth"}>
             <IntroRules />
-          </ProtectedUserRoute>
+          </AuthGuard>
         ),
       },
       {
         path: "level/:lvl",
         element: (
-          <ProtectedUserRoute>
+          <AuthGuard url={`${clientUrlDev}/level/:lvl`} redirectTo={"/noauth"}>
             <Level />
-          </ProtectedUserRoute>
+          </AuthGuard>
         ),
       },
       {
         path: "/admin/login",
         element: <AdminLoginForm />,
       },
-      {
-        path: "admin",
-        element: (
-          <ProtectedAdminRoute>
-            <Admin />
-          </ProtectedAdminRoute>
-        ),
-      },
+      // {
+      //   path: "admin",
+      //   element: (
+      //     <ProtectedAdminRoute>
+      //       <Admin />
+      //     </ProtectedAdminRoute>
+      //   ),
+      // },
       {
         path: "noauth",
         element: <NoAuth />,
@@ -73,19 +75,5 @@ const Routes = createBrowserRouter([
     ],
   },
 ]);
-function ProtectedUserRoute({ children }) {
-  const userAccessToken = Cookies.get("userAccessToken");
-  if (userAccessToken) return children;
-  return <Navigate to="/noauth" />;
-}
 
-function ProtectedAdminRoute({ children }) {
-  const adminAccessToken = Cookies.get("adminAccessToken");
-  const isAuth = !!adminAccessToken;
-  if (isAuth) return children;
-  {
-    alert("Trying to act smart? haha! Go login first!");
-  }
-  return <Navigate to="/admin/login" />;
-}
 export default Routes;

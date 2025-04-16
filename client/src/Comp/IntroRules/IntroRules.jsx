@@ -3,7 +3,10 @@ import { useNavigate } from "react-router-dom";
 const IntroRules = () => {
   const navigate = useNavigate();
   const handleEnterGame = () => {
-    navigate(`/level/1`);
+    const currentLvl = localStorage.getItem("currentLvl")
+    console.log(currentLvl);
+    currentLvl ? navigate(`/level/${currentLvl}`)
+:    navigate(`/level/1`);
   };
   const rulesDesc = [
     {
@@ -36,7 +39,7 @@ const IntroRules = () => {
       title: "Try. Fail. Repeat —",
       desc: "But beware the loop... too many tries and the void might notice you.",
     },
-  ]
+  ];
   return (
     <div className="flex flex-col items-center justify-start min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-gray-100 pt-24 relative overflow-hidden">
       {/* Aesthetic matrix-style glow */}

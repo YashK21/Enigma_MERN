@@ -1,10 +1,9 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import envConfig from "../../config/env.config";
 
 const SignUp = () => {
-  const prodUrl = import.meta.env.VITE_PROD;
-  const localhost = import.meta.env.VITE_LOCALHOST;
   const [username, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,7 +21,7 @@ const SignUp = () => {
     });
     try {
       const res = await axios.post(
-        `${prodUrl}/register`,
+        `${envConfig.API_BASE_URL}/register`,
         {
           username,
           email,
