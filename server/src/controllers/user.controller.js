@@ -132,6 +132,7 @@ const logoutUser = async (req, res) => {
         }
       );
       return res
+        .clearCookie("userAccessToken",cookieOptions)
         .status(200)
         .json(new ApiRes(200, {}, "User LoggedOut SuccessFully!"));
     } else {
@@ -145,7 +146,7 @@ const logoutUser = async (req, res) => {
   }
 };
 
-const getUserLevelDetails  = async (req, res) => {
+const getUserLevelDetails = async (req, res) => {
   const { username } = req.body;
   console.log(username);
 
@@ -191,7 +192,6 @@ const levelAnsCheck = async (req, res) => {
     ) {
       return res.status(400).json(new ApiError(400, "Wrong Answer!"));
     }
-
 
     const userNextLvl = await Lvl.findOne({
       Lvl_No: Number(currentLvlDetails?.Lvl_No) + 1,
@@ -248,11 +248,21 @@ const getAllUserScore = async (_, res) => {
     console.log(error);
   }
 };
+
+const autheticateUser = async (req, res) => {
+  return res.status(200).json(
+    new ApiRes(200, "Authenticated User ", {
+      autheticated: true,
+      user: req.user,
+    })
+  );
+};
 export {
   registerUser,
   loginUser,
   logoutUser,
-  getUserLevelDetails  as getCurrentUserDetails,
+  getUserLevelDetails as getCurrentUserDetails,
   levelAnsCheck,
+  autheticateUser,
   getAllUserScore,
 };
