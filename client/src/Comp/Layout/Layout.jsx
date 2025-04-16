@@ -47,6 +47,10 @@ const Layout = () => {
       "/login",
       "/signup",
       "/admin",
+      "/rules",
+      "/noauth",
+      "/contact",
+      "/leaderboard",
       "/admin/level",
       "/admin/login",
     ];
@@ -62,7 +66,7 @@ const Layout = () => {
   }
   return (
     <>
-      {username ? <NavBar /> : null}
+      {<NavBar />}
       <Outlet context={{ userDetails, isChecking }} />
     </>
   );

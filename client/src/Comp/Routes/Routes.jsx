@@ -13,7 +13,8 @@ import {
   Contact,
 } from "../index.js";
 import AuthGuard from "../../utils/AuthGuard.jsx";
-const clientUrlDev = import.meta.env.VITE_CLIENT_URL_DEV
+import envConfig from "../../config/env.config.js";
+const clientUrlDev = import.meta.env.VITE_CLIENT_URL_DEV;
 
 const Routes = createBrowserRouter([
   {
@@ -34,20 +35,21 @@ const Routes = createBrowserRouter([
       },
       {
         path: "rules",
-        element: (
-          <AuthGuard url={`${clientUrlDev}/rules`} redirectTo={"/noauth"}>
-            <IntroRules />
-          </AuthGuard>
-        ),
+        element: <IntroRules />,
       },
       {
         path: "level/:lvl",
         element: (
-          <AuthGuard url={`${clientUrlDev}/level/:lvl`} redirectTo={"/noauth"}>
+          <AuthGuard>
             <Level />
           </AuthGuard>
         ),
       },
+      // <AuthGuard
+      //   url={`${clientUrlDev}/level/:lvl`}
+      //   redirectTo={"noauth"}
+      // >
+      // </AuthGuard>
       {
         path: "/admin/login",
         element: <AdminLoginForm />,

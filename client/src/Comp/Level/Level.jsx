@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-
 import { useNavigate, useLocation, useOutletContext } from "react-router-dom";
 import axios from "axios";
 import lvl_Bg from "../img/lvl_Bg.jpg";
@@ -46,7 +45,7 @@ const Level = () => {
     } finally {
       setTimeout(() => {
         setIsLoading(false);
-        setFeedback(null); 
+        setFeedback(null);
       }, 2500);
     }
   };

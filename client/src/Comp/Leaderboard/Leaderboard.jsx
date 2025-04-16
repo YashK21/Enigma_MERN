@@ -4,21 +4,24 @@ import { useEffect, useState } from "react";
 const Leaderboard = () => {
   const [allUsersScore, setAllUsersScore] = useState([]);
   const getLeaderBoard = async () => {
+    console.log("called");
+
     try {
-      const res = await axios.get(`${envConfig.API_BASE_URL}/leaderboard`, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        withCredentials: true,
-      });
+      const res = await axios.get(`${envConfig.API_BASE_URL}/leaderboard`);
       setAllUsersScore(res.data.data);
     } catch (error) {
       console.log(error);
     }
   };
   useEffect(() => {
+    console.log("useffect mounted");
+
     getLeaderBoard();
+    return () => {
+      console.log("unmounted - leaderboard");
+    };
   }, []);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-green-300 font-mono px-4 py-12 flex flex-col items-center justify-center">
       <h1 className="text-4xl mb-10 font-bold tracking-widest text-center text-green-400 animate-pulse">

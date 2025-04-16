@@ -5,7 +5,13 @@ const NavBar = () => {
     <nav className="p-4 fixed top-0 left-0 w-full">
       <div className="gap-2 flex justify-between items-center">
         <div className="font-pressStart text-white text-xs font-bold lg:text-xl">
-          Enigma
+        <Link
+            onClick={() => console.log("clicked")}
+            to="/"
+            className="text-white hover:text-gray-300 font-pressStart"
+          >
+            Enigma
+            </Link>
         </div>
         <div className="flex gap-4 lg:gap-7 text-xs lg:text-xl">
           <Link
