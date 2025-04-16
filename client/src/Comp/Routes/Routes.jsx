@@ -45,23 +45,19 @@ const Routes = createBrowserRouter([
           </AuthGuard>
         ),
       },
-      // <AuthGuard
-      //   url={`${clientUrlDev}/level/:lvl`}
-      //   redirectTo={"noauth"}
-      // >
-      // </AuthGuard>
+
       {
-        path: "/admin/login",
+        path: "admin/login",
         element: <AdminLoginForm />,
       },
-      // {
-      //   path: "admin",
-      //   element: (
-      //     <ProtectedAdminRoute>
-      //       <Admin />
-      //     </ProtectedAdminRoute>
-      //   ),
-      // },
+      {
+        path: "admin",
+        element: (
+          <AuthGuard>
+            <Admin />
+          </AuthGuard>
+        ),
+      },
       {
         path: "noauth",
         element: <NoAuth />,

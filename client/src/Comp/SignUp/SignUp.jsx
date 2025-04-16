@@ -39,9 +39,10 @@ const SignUp = () => {
           type: "success",
           msg: res.data.data,
         });
-        // setTimeout(() => {
-        //   navigate("/login");
-        // }, 2000);
+        setTimeout(() => {
+          
+          navigate("/login");
+        }, 2000);
       } else {
         setStatus({
           type: "error",
